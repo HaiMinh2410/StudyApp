@@ -1,0 +1,65 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+/* Custom Scrollbar for a premium look */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 20px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+    border: 3px solid transparent;
+    background-clip: content-box;
+}
+
+/* Ensure drawer stays open on large screens but doesn't feel cramped */
+@media (min-width: 1024px) {
+    .drawer-content {
+        background-image:
+            radial-gradient(at 0% 0%, rgba(52, 152, 219, 0.05) 0px, transparent 50%),
+            radial-gradient(at 100% 100%, rgba(44, 62, 80, 0.05) 0px, transparent 50%);
+    }
+
+    /* Give question cards a multi-column potential if we want later */
+    #exerciseContainer {
+        @apply grid grid-cols-1 gap-8 max-w-full;
+    }
+}
+
+/* Question card interaction animations */
+.card-body label {
+    @apply transition-transform active:scale-[0.98];
+}
+
+/* Radio button refinement */
+.radio-primary {
+    @apply border-2 border-base-content/20;
+}
+
+/* Soft entry animation for cards */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.question {
+    animation: fadeInUp 0.4s ease-out forwards;
+}

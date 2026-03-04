@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Practice App</title>
+</head>
+
+<body class="bg-base-200 min-h-screen font-sans">
+
+    <!-- Responsive Drawer: Open by default on LG screens -->
+    <div class="drawer">
+        <input id="my-drawer" type="checkbox" class="drawer-toggle" />
+
+        <div class="drawer-content flex flex-col h-screen overflow-hidden bg-base-200">
+            <!-- Navbar -->
+            <header class="navbar bg-primary text-primary-content sticky top-0 z-50 shadow-md lg:shadow-sm px-4">
+
+                <div class="flex-1">
+                    <a onclick="document.getElementById('mainContent').scrollTo({top:0,behavior:'smooth'})"
+                        class="btn btn-ghost text-xl font-black tracking-tight uppercase cursor-pointer">English
+                        Practice</a>
+                </div>
+                <div class="flex-none gap-2 px-2">
+                    <!-- Desktop Actions can go here -->
+                </div>
+                <div class="flex-none">
+                    <label for="my-drawer" class="btn btn-square btn-ghost">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                            class="inline-block w-6 h-6 stroke-current">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </label>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <main id="mainContent" class="flex-1 overflow-y-auto custom-scrollbar">
+                <div class="max-w-5xl mx-auto p-4 lg:p-10 space-y-8 pb-32 lg:pb-12">
+
+                    <!-- Hero Section / Welcome -->
+                    <section class="space-y-2">
+                        <h1 class="text-3xl lg:text-4xl font-extrabold text-base-content tracking-tight">Practice
+                            Dashboard</h1>
+                        <p class="text-base-content/60">Generate and evaluate your English multi-choice questions in
+                            seconds.</p>
+                    </section>
+
+                    <!-- Create Exercise card -->
+                    <section class="card bg-base-100 shadow-xl border border-base-300">
+                        <div class="card-body gap-6">
+                            <div class="flex items-center gap-3">
+                                <div
+                                    class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 4v16m8-8H4" />
+                                    </svg>
+                                </div>
+                                <h2 class="card-title text-2xl font-bold">New Exercise</h2>
+                            </div>
+
+                            <div class="form-control w-full space-y-2">
+                                <label class="label w-full">
+                                    <span class="label-text font-medium">Input MCQ Data</span>
+                                    <span class="label-text-alt opacity-50 italic">Include Question + Options + Answer
+                                        Key</span>
+                                </label>
+                                <textarea id="inputData"
+                                    class="textarea w-full textarea-bordered h-56 font-mono text-sm focus:textarea-primary transition-all leading-relaxed"
+                                    placeholder="1. What is...?&#10;A)...&#10;B)...&#10;&#10;ANSWER KEY&#10;1. A)"></textarea>
+                            </div>
+
+                            <div class="card-actions justify-end gap-2">
+                                <button id="clearInputBtn" disabled onclick="clearInput()"
+                                    class="btn btn-ghost btn-lg px-8 gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                    Clear
+                                </button>
+                                <button id="generateExerciseBtn" disabled onclick="generateExercise()"
+                                    class="btn btn-primary btn-lg px-12 gap-2 shadow-lg shadow-primary/20">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                    </svg>
+                                    Generate
+                                </button>
+                            </div>
+
+
+                        </div>
+                    </section>
+
+                    <!-- Exercise Container -->
+                    <section id="exerciseContainer" class="grid grid-cols-1 gap-6">
+                        <!-- Questions injected here -->
+                    </section>
+                </div>
+            </main>
+
+            <!-- Bottom Navigation: MOBILE ONLY (Material Design Style) -->
+            <div class="btm-nav lg:hidden flex items-center justify-around bg-white border-t border-base-300 h-14 z-50">
+                <button id="submitBottomBtn" disabled onclick="submitAnswers()" class="group">
+                    <div
+                        class="rounded-full flex items-center justify-center group-active:bg-primary/30 transition-all duration-200">
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            class="size-8 text-primary group-disabled:text-base-content/20" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                </button>
+                <button id="resetBottomBtn" disabled onclick="resetExercise()" class="group">
+                    <div class="rounded-full flex items-center justify-center transition-all duration-200">
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            class="size-8 text-orange-600 group-disabled:text-base-content/20" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                        </svg>
+                    </div>
+                </button>
+                <button onclick="document.getElementById('mainContent').scrollTo({top:0,behavior:'smooth'})"
+                    class="group">
+                    <div class="rounded-full flex items-center justify-centertransition-all duration-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="size-8 text-black" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                        </svg>
+                    </div>
+                </button>
+            </div>
+
+            <!-- Floating Sidebar Actions: DESKTOP ONLY -->
+            <div class="hidden lg:flex items-center gap-3 fixed bottom-10 right-10 z-[100]">
+                <button id="desktopResetBtn" disabled onclick="resetExercise()"
+                    class="btn btn-warning btn-circle size-14 hover:scale-110 active:scale-95 transition-all">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="size-8" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                </button>
+                <button id="desktopSubmitBtn" disabled onclick="submitAnswers()"
+                    class="btn btn-primary btn-circle size-14 hover:scale-110 active:scale-95 transition-all">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="size-8" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </button>
+                <button onclick="document.getElementById('mainContent').scrollTo({top:0,behavior:'smooth'})"
+                    class="btn btn-circle btn-neutral size-10 hover:scale-110 active:scale-95 transition-all">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="size-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="drawer-side z-[60] border-r border-base-300">
+            <label for="my-drawer" class="drawer-overlay"></label>
+            <div class="flex flex-col w-80 min-h-full bg-base-100 text-base-content">
+                <div class="p-6 border-b border-base-200 flex justify-between items-center">
+                    <h3 class="text-sm font-black uppercase tracking-widest text-base-content/50">Activity History</h3>
+                    <button onclick="clearHistory()"
+                        class="btn btn-ghost btn-xs text-error opacity-60 hover:opacity-100">Clear</button>
+                </div>
+                <!-- Search/Filter could go here -->
+                <nav id="historyContainer" class="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar">
+                    <!-- Items -->
+                </nav>
+                <div class="p-4 bg-base-200/50 border-t border-base-200">
+                    <p class="text-[10px] text-center opacity-40 uppercase font-bold tracking-tighter">Your recent study
+                        records</p>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Custom Modal for Submit Confirmation -->
+    <dialog id="submitModal" class="modal modal-bottom sm:modal-middle">
+        <div class="modal-box">
+            <h3 class="font-bold text-lg" id="modalTitle">Xác nhận nộp bài</h3>
+            <p class="py-4" id="modalMessage">Bạn có chắc chắn muốn nộp bài không?</p>
+            <div class="modal-action">
+                <form method="dialog">
+                    <button class="btn btn-ghost" id="modalCancelBtn">Làm tiếp</button>
+                    <button class="btn btn-primary ml-2" id="modalConfirmBtn" onclick="window.processSubmission()">Nộp
+                        bài</button>
+                </form>
+            </div>
+        </div>
+        <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form>
+    </dialog>
+
+    <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>
