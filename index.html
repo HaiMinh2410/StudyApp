@@ -23,6 +23,15 @@
                         Practice</a>
                 </div>
                 <div class="flex-none gap-2 px-2 flex items-center">
+                    <!-- My Word List Button -->
+                    <button onclick="window.openWordListModal()" class="btn btn-ghost btn-circle" title="My Word List">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                        </svg>
+                    </button>
+
                     <!-- Theme Toggle -->
                     <button id="themeToggle" class="btn btn-ghost btn-circle">
                         <!-- Sun icon (visible in dark mode) -->
@@ -106,28 +115,136 @@
                                 </div>
                             </div>
 
-                            <div class="card-actions justify-between lg:justify-end gap-2">
-                                <button id="clearInputBtn" disabled onclick="clearInput()"
-                                    class="btn btn-ghost btn-lg px-8 gap-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                    </svg>
-                                    Clear
-                                </button>
-                                <button id="generateExerciseBtn" disabled onclick="generateExercise()"
-                                    class="btn btn-primary btn-lg px-12 gap-2 shadow-lg shadow-primary/20">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M13 10V3L4 14h7v7l9-11h-7z" />
-                                    </svg>
-                                    Generate
-                                </button>
+                            <div class="card-actions justify-between lg:justify-end items-center gap-4">
+                                <div class="form-control max-md:ml-auto md:mr-auto">
+                                    <label class="label cursor-pointer gap-3">
+                                        <span class="label-text font-medium">Bật đồng hồ đếm ngược</span>
+                                        <input type="checkbox" id="timerToggle" class="toggle toggle-primary" />
+                                    </label>
+                                </div>
+                                <div class="flex max-md:justify-between max-md:w-full gap-2">
+                                    <button id="clearInputBtn" disabled onclick="clearInput()"
+                                        class="btn btn-ghost btn-lg px-8 gap-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
+                                        Clear
+                                    </button>
+                                    <button id="generateExerciseBtn" disabled onclick="generateExercise()"
+                                        class="btn btn-primary btn-lg px-12 gap-2 shadow-lg shadow-primary/20">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                        </svg>
+                                        Generate
+                                    </button>
+                                </div>
                             </div>
 
 
+                        </div>
+                    </section>
+
+                    <!-- Timer Section -->
+                    <section id="timerSection" class="hidden animate-in fade-in slide-in-from-top-4 duration-500">
+                        <div class="card bg-base-100 shadow-sm border border-base-300">
+                            <div class="card-body p-6">
+                                <div class="flex flex-col lg:flex-row items-center justify-between gap-6">
+                                    <!-- Timer Display -->
+                                    <div class="flex flex-col items-center lg:items-start gap-2">
+                                        <div
+                                            class="flex items-center gap-2 text-base-content/60 uppercase text-xs font-bold tracking-widest">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            Countdown Timer
+                                        </div>
+                                        <div class="flex items-center gap-4">
+                                            <div class="grid grid-flow-col gap-4 text-center auto-cols-max">
+                                                <div
+                                                    class="flex flex-col px-4 py-2 bg-black text-white font-bold rounded-box shadow-sm border border-black/10 [[data-theme='dark']_&]:bg-white [[data-theme='dark']_&]:text-black">
+                                                    <span class="countdown font-mono text-4xl">
+                                                        <span id="timerMin" style="--value:0;"></span>
+                                                    </span>
+                                                    <span class="text-[10px] uppercase opacity-60">min</span>
+                                                </div>
+                                                <div
+                                                    class="flex flex-col px-4 py-2 bg-black text-white font-bold rounded-box shadow-sm border border-black/10 [[data-theme='dark']_&]:bg-white [[data-theme='dark']_&]:text-black">
+                                                    <span class="countdown font-mono text-4xl">
+                                                        <span id="timerSec" style="--value:0;"></span>
+                                                    </span>
+                                                    <span class="text-[10px] uppercase opacity-60">sec</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="flex max-md:flex-col gap-1">
+                                                <button id="startTimerBtn" onclick="toggleTimer()"
+                                                    class="btn btn-primary btn-md shadow-md">
+                                                    <svg id="playIcon" xmlns="http://www.w3.org/2000/svg"
+                                                        class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                                        <path fill-rule="evenodd"
+                                                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                                                            clip-rule="evenodd" />
+                                                    </svg>
+                                                    <svg id="pauseIcon" xmlns="http://www.w3.org/2000/svg"
+                                                        class="h-5 w-5 hidden" viewBox="0 0 20 20" fill="currentColor">
+                                                        <path fill-rule="evenodd"
+                                                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                                            clip-rule="evenodd" />
+                                                    </svg>
+                                                    <span id="timerBtnText">Bắt đầu</span>
+                                                </button>
+                                                <button onclick="resetTimer()"
+                                                    class="btn btn-ghost btn-md border-primary text-primary opacity-70">Đặt lại</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Timer Controls -->
+                                    <div class="flex flex-col gap-4 w-full lg:w-auto">
+                                        <div class="flex items-center justify-center lg:justify-end gap-2">
+                                            <div class="join shadow-sm border border-base-200">
+                                                <button onclick="adjustTimer(-1)" class="btn btn-sm btn-ghost join-item"
+                                                    title="Giảm theo bước nhảy">-</button>
+                                                <div
+                                                    class="join-item flex items-center px-4 bg-base-200 text-xs font-bold uppercase tracking-tight">
+                                                    Bước nhảy: <span id="stepDisplay" class="ml-1">5</span>p
+                                                </div>
+                                                <button onclick="adjustTimer(1)" class="btn btn-sm btn-ghost join-item"
+                                                    title="Tăng theo bước nhảy">+</button>
+                                            </div>
+                                            <select id="stepSelect" onchange="updateStep()"
+                                                class="select max-w-24 select-bordered select-sm focus:select-primary">
+                                                <option value="1">Bước 1p</option>
+                                                <option value="2">Bước 2p</option>
+                                                <option value="5" selected>Bước 5p</option>
+                                                <option value="10">Bước 10p</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="flex flex-wrap items-center justify-center lg:justify-end gap-2">
+                                            <div
+                                                class="text-[10px] items-center opacity-40 uppercase font-bold tracking-tighter w-full text-center lg:text-right mb-[-5px]">
+                                                Quick Presets</div>
+                                            <button onclick="setTimer(15)"
+                                                class="btn btn-xs btn-outline btn-primary rounded-full px-3">15p</button>
+                                            <button onclick="setTimer(30)"
+                                                class="btn btn-xs btn-outline btn-primary rounded-full px-3">30p</button>
+                                            <button onclick="setTimer(45)"
+                                                class="btn btn-xs btn-outline btn-primary rounded-full px-3">45p</button>
+                                            <button onclick="setTimer(60)"
+                                                class="btn btn-xs btn-outline btn-primary rounded-full px-3">60p</button>
+                                            <button onclick="setTimer(90)"
+                                                class="btn btn-xs btn-outline btn-primary rounded-full px-3">90p</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </section>
 
@@ -143,9 +260,9 @@
                 <button id="submitBottomBtn" disabled onclick="submitAnswers()"
                     class="group flex-1 h-14 flex justify-center">
                     <div
-                        class="flex items-center justify-center group-active:bg-primary/30 transition-all duration-200">
+                        class="flex items-center justify-center text-primary">
                         <svg xmlns="http://www.w3.org/2000/svg"
-                            class="size-8 text-green-500 group-disabled:text-base-content/20" fill="none"
+                            class="size-10 group-disabled:text-base-content/20" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                                 d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -154,9 +271,9 @@
                 </button>
                 <button id="resetBottomBtn" disabled onclick="resetExercise()"
                     class="group flex-1 h-14 flex justify-center">
-                    <div class="rounded-full flex items-center justify-center transition-all duration-200">
+                    <div class="rounded-full flex items-center justify-center">
                         <svg xmlns="http://www.w3.org/2000/svg"
-                            class="size-8 text-yellow-400 group-disabled:text-base-content/20" fill="none"
+                            class="size-10 text-yellow-500 group-disabled:text-base-content/20" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                                 d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -165,7 +282,7 @@
                 </button>
                 <button onclick="document.getElementById('mainContent').scrollTo({top:0,behavior:'smooth'})"
                     class="group h-14 flex-1 flex justify-center">
-                    <div class="rounded-full flex items-center justify-centertransition-all duration-200">
+                    <div class="rounded-full flex items-center justify-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="size-8 text-black" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
@@ -201,6 +318,16 @@
                             d="M5 10l7-7m0 0l7 7m-7-7v18" />
                     </svg>
                 </button>
+            </div>
+
+            <!-- Float Timer Display (Only visible when scrolling) -->
+            <div id="floatTimer" class="fixed top-17 left-4 lg:top-18 lg:left-6 z-[60] hidden slide-in-from-top-4">
+                <div
+                    class="bg-black text-white px-4 py-2 rounded-full shadow-2xl border border-black/10 flex items-center gap-3 ring-4 ring-primary/20 [[data-theme='dark']_&]:bg-white [[data-theme='dark']_&]:text-black">
+                    <span class="font-mono font-black text-2xl tracking-tighter min-w-[80px] text-center">
+                        <span id="floatMin">00</span>:<span id="floatSec">00</span>
+                    </span>
+                </div>
             </div>
         </div>
 
@@ -241,6 +368,372 @@
         <form method="dialog" class="modal-backdrop">
             <button>close</button>
         </form>
+    </dialog>
+
+    <!-- Multi-purpose Modals & Popups -->
+
+    <!-- Selection Tooltip -->
+    <div id="selectionPopup" class="fixed hidden z-[100] animate-in fade-in zoom-in duration-200">
+        <button onclick="window.openAddToAlbumModal()"
+            class="btn btn-sm btn-primary shadow-2xl gap-2 rounded-full px-4 border-2 border-white/20">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
+            </svg>
+            <span class="font-bold">Thêm vào Album</span>
+        </button>
+    </div>
+
+    <!-- Add Word to Album Modal -->
+    <dialog id="addToAlbumModal" class="modal modal-bottom sm:modal-middle">
+        <div class="modal-box bg-base-100/95 backdrop-blur-md border border-base-300">
+            <div class="flex items-center gap-3 mb-6">
+                <div class="p-2 bg-primary/10 rounded-lg text-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                </div>
+                <h3 class="font-black text-xl">Lưu từ vựng mới</h3>
+            </div>
+
+            <div class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="form-control">
+                        <label class="label"><span class="label-text font-bold opacity-60">Từ vựng</span></label>
+                        <input type="text" id="selectedWordInput"
+                            class="input input-bordered font-bold text-lg text-primary bg-primary/5" readonly />
+                    </div>
+                    <div class="form-control">
+                        <label class="label"><span class="label-text font-bold opacity-60">Loại từ (n, v,
+                                adj...)</span></label>
+                        <input type="text" id="wordTypeInput" placeholder="Ví dụ: n"
+                            class="input input-bordered focus:input-primary" />
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="form-control">
+                        <label class="label"><span class="label-text font-bold opacity-60">Phiên âm</span></label>
+                        <input type="text" id="wordPhoneticInput" placeholder="/.../"
+                            class="input input-bordered focus:input-primary" />
+                    </div>
+                    <div class="form-control">
+                        <label class="label"><span class="label-text font-bold opacity-60">Nghĩa tiếng
+                                Việt</span></label>
+                        <input type="text" id="wordMeaningInput" placeholder="Nghĩa của từ..."
+                            class="input input-bordered focus:input-primary" />
+                    </div>
+                </div>
+
+                <div class="form-control">
+                    <label class="label"><span class="label-text font-bold opacity-60">Chọn Album</span></label>
+                    <div class="flex gap-2">
+                        <select id="albumSelect" class="select select-bordered flex-1 focus:select-primary"></select>
+                    </div>
+                </div>
+
+                <div class="form-control">
+                    <label class="label"><span class="label-text font-bold opacity-60">Hoặc tạo Album mới</span></label>
+                    <div class="join w-full">
+                        <input type="text" id="newAlbumName" placeholder="Tên album..."
+                            class="input input-bordered join-item flex-1 focus:outline-none" />
+                        <button onclick="window.createNewAlbum()" class="btn btn-neutral join-item">Tạo</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-action">
+                <form method="dialog">
+                    <button class="btn btn-ghost">Hủy</button>
+                    <button type="button" onclick="window.saveWordToAlbum()" class="btn btn-primary px-8 ml-2">Lưu
+                        lại</button>
+                </form>
+            </div>
+        </div>
+        <form method="dialog" class="modal-backdrop"><button>close</button></form>
+    </dialog>
+
+    <!-- Edit Word Modal -->
+    <dialog id="editWordModal" class="modal modal-bottom sm:modal-middle">
+        <div class="modal-box bg-base-100/95 backdrop-blur-md border border-base-300">
+            <div class="flex items-center gap-3 mb-6">
+                <div class="p-2 bg-secondary/10 rounded-lg text-secondary">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                </div>
+                <h3 class="font-black text-xl">Sửa từ vựng</h3>
+            </div>
+
+            <div class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="form-control">
+                        <label class="label"><span class="label-text font-bold opacity-60">Từ vựng</span></label>
+                        <input type="text" id="editWordInput"
+                            class="input input-bordered font-bold text-lg text-primary focus:input-primary" />
+                    </div>
+                    <div class="form-control">
+                        <label class="label"><span class="label-text font-bold opacity-60">Loại từ (n, v,
+                                adj...)</span></label>
+                        <input type="text" id="editWordTypeInput" placeholder="Ví dụ: n"
+                            class="input input-bordered focus:input-primary" />
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="form-control">
+                        <label class="label"><span class="label-text font-bold opacity-60">Phiên âm</span></label>
+                        <input type="text" id="editWordPhoneticInput" placeholder="/.../"
+                            class="input input-bordered focus:input-primary" />
+                    </div>
+                    <div class="form-control">
+                        <label class="label"><span class="label-text font-bold opacity-60">Nghĩa tiếng
+                                Việt</span></label>
+                        <input type="text" id="editWordMeaningInput" placeholder="Nghĩa của từ..."
+                            class="input input-bordered focus:input-primary" />
+                    </div>
+                </div>
+
+                <!-- Hidden fields for identification -->
+                <input type="hidden" id="editOriginalWord" />
+            </div>
+
+            <div class="modal-action">
+                <form method="dialog">
+                    <button class="btn btn-ghost">Hủy</button>
+                    <button type="button" onclick="window.saveEditedWord()" class="btn btn-secondary px-8 ml-2">Lưu thay
+                        đổi</button>
+                </form>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- Confirm Duplicate Modal -->
+    <dialog id="confirmDuplicateModal" class="modal modal-bottom sm:modal-middle">
+        <div class="modal-box">
+            <h3 class="font-bold text-lg text-warning flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                Từ vựng đã tồn tại
+            </h3>
+            <p class="py-4" id="duplicateModalMessage"></p>
+            <div class="modal-action">
+                <form method="dialog">
+                    <button class="btn btn-ghost">Không, quay lại</button>
+                    <button type="button" onclick="window.confirmSaveDuplicate()" class="btn btn-warning ml-2">Có, vẫn
+                        thêm</button>
+                </form>
+            </div>
+        </div>
+        <form method="dialog" class="modal-backdrop"><button>close</button></form>
+    </dialog>
+
+    <!-- Move Word Modal -->
+    <dialog id="moveWordsModal" class="modal modal-bottom sm:modal-middle">
+        <div class="modal-box">
+            <h3 class="font-bold text-lg flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                </svg>
+                Di chuyển từ vựng
+            </h3>
+            <p class="py-4 opacity-70">Chọn album đích cho các từ đã chọn:</p>
+            <div class="form-control">
+                <select id="targetAlbumSelect" class="select select-bordered w-full focus:select-primary"></select>
+            </div>
+            <div class="modal-action">
+                <form method="dialog">
+                    <button class="btn btn-ghost">Hủy</button>
+                    <button type="button" onclick="window.confirmMoveWords()" class="btn btn-primary ml-2 px-8">Xác nhận
+                        chuyển</button>
+                </form>
+            </div>
+        </div>
+        <form method="dialog" class="modal-backdrop"><button>close</button></form>
+    </dialog>
+
+    <!-- General Confirmation Modal (for bulk delete etc) -->
+    <dialog id="confirmGeneralModal" class="modal modal-bottom sm:modal-middle">
+        <div class="modal-box">
+            <h3 class="font-bold text-lg text-error" id="confirmGeneralTitle">Xác nhận</h3>
+            <p class="py-4" id="confirmGeneralMessage"></p>
+            <div class="modal-action">
+                <form method="dialog">
+                    <button class="btn btn-ghost">Quay lại</button>
+                    <button type="button" id="confirmGeneralBtn" class="btn btn-error ml-2">Đồng ý</button>
+                </form>
+            </div>
+        </div>
+        <form method="dialog" class="modal-backdrop"><button>close</button></form>
+    </dialog>
+
+    <!-- My Word List (Albums) Modal -->
+    <dialog id="wordListModal" class="modal">
+        <div
+            class="modal-box w-11/12 max-w-5xl h-[80vh] flex flex-col p-0 overflow-hidden bg-base-100 border border-base-300 shadow-2xl">
+            <div class="p-4 lg:p-6 bg-primary text-primary-content flex justify-between items-center shrink-0">
+                <div class="flex items-center gap-3">
+                    <button onclick="window.toggleWordListSidebar()" class="btn btn-sm btn-circle btn-ghost"
+                        title="Ẩn/Hiện danh sách Album">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h7" />
+                        </svg>
+                    </button>
+                    <div class="flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 hidden sm:block" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                        </svg>
+                        <h2 class="text-xl lg:text-2xl font-black uppercase tracking-tight">My Word Albums</h2>
+                    </div>
+                </div>
+                <form method="dialog"><button class="btn btn-sm btn-circle btn-ghost">✕</button></form>
+            </div>
+
+            <div class="flex flex-1 overflow-hidden relative">
+                <!-- Sidebar Backdrop (Mobile only) -->
+                <div id="sidebarBackdrop" onclick="window.toggleWordListSidebar()"
+                    class="absolute inset-0 bg-base-300/60 backdrop-blur-[2px] z-40 hidden lg:hidden opacity-0 transition-opacity duration-300">
+                </div>
+
+                <!-- Sidebar: Album List -->
+                <div id="wordListSidebar"
+                    class="absolute lg:relative inset-y-0 left-0 w-72 lg:w-1/3 z-50 lg:z-auto border-r border-base-200 flex flex-col bg-base-100 lg:bg-base-200/30 transition-all duration-300 transform -translate-x-full lg:translate-x-0 opacity-0 lg:opacity-100 overflow-hidden">
+                    <div class="p-4 pb-0 flex flex-col gap-3 border-b border-base-200/50">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] font-black uppercase tracking-widest opacity-40">My
+                                Collections</span>
+                            <button onclick="window.showCreateAlbumInput()" class="btn btn-xs btn-circle btn-primary"
+                                title="Tạo Album mới">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                        d="M12 4v16m8-8H4" />
+                                </svg>
+                            </button>
+                        </div>
+                        <div id="newAlbumQuickInput" class="hidden animate-in slide-in-from-top-2 duration-200">
+                            <div class="join w-full">
+                                <input type="text" id="sideNewAlbumName" placeholder="Tên album..."
+                                    class="input input-xs input-bordered join-item flex-1 focus:outline-none" />
+                                <button onclick="window.createAlbumFromSidebar()"
+                                    class="btn btn-xs btn-neutral join-item">Lưu</button>
+                            </div>
+                        </div>
+                        <div class="flex justify-end gap-2">
+                            <select id="sortAlbum" onchange="window.renderSideAlbumList()"
+                                class="select select-sm select-bordered w-full border ring-none outline-none rounded-full text-xs px-4 max-w-26 min-h-0 h-8">
+                                <option value="newest">Mới nhất</option>
+                                <option value="oldest">Cũ nhất</option>
+                                <option value="most">Nhiều từ nhất</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="sideAlbumList" class="flex-1 overflow-y-auto space-y-1 p-2">
+                        <!-- Albums injected here -->
+                    </div>
+                </div>
+
+                <!-- Main: Word List in Album -->
+                <div class="flex-1 flex flex-col bg-base-100">
+                    <div id="albumHeader"
+                        class="p-4 lg:p-6 border-b border-base-100 flex flex-col gap-4 bg-base-100 sticky top-0 z-20">
+                        <div class="flex justify-between items-center w-full">
+                            <div class="flex flex-col">
+                                <h3 class="text-xl font-bold" id="currentAlbumTitle">Chọn một Album</h3>
+                                <div id="studyModeControl" class="flex items-center gap-2 mt-2 hidden">
+                                    <label class="label cursor-pointer gap-2 p-0">
+                                        <span class="label-text text-sm font-medium">Ẩn nghĩa</span>
+                                        <input type="checkbox" id="hideMeaningToggle"
+                                            class="toggle toggle-primary toggle-sm"
+                                            onchange="window.renderWordListOnly()" />
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button id="clearAllWordsBtn" onclick="window.confirmClearAllWords()"
+                                    class="btn bg-red-500 btn-xs text-white rounded-full gap-1 border-error/20 hidden"
+                                    title="Xóa toàn bộ từ vựng">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                    Xóa hết
+                                </button>
+
+                                <div id="albumActions" class="flex items-center gap-1 hidden">
+                                    <button onclick="window.toggleSelectionMode()"
+                                        class="btn btn-ghost btn-xs rounded-full gap-1 border-base-300"
+                                        id="toggleSelectionBtn">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                                        </svg>
+                                        Chọn
+                                    </button>
+
+                                    <select id="wordSortControl" onchange="window.setWordSortType(this.value)"
+                                        class="select select-xs select-bordered rounded-full text-[10px] hidden border focus:outline-none outline-none focus:border-primary ">
+                                        <option value="newest">Mới nhất</option>
+                                        <option value="oldest">Cũ nhất</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Bulk Actions Bar (Hidden by default) -->
+                        <div id="bulkActionsBar"
+                            class="hidden flex items-center justify-between bg-primary/10 p-2 px-4 rounded-xl border border-primary/20 animate-in slide-in-from-top-2">
+                            <div class="flex items-center gap-3">
+                                <span class="text-xs font-bold text-primary" id="selectedCountText">0 selected</span>
+                                <button onclick="window.selectAllWords(true)"
+                                    class="btn btn-primary btn-xs rounded-lg gap-1">Chọn hết</button>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button id="bulkMoveBtn" disabled onclick="window.openMoveWordsModal()"
+                                    class="btn btn-primary btn-xs rounded-lg gap-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                                    </svg>
+                                    Di chuyển
+                                </button>
+                                <button id="bulkDeleteBtn" disabled onclick="window.confirmDeleteSelected()"
+                                    class="btn btn-error btn-xs rounded-lg gap-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                    Xóa bỏ
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="wordListInAlbum" class="flex-1 overflow-y-auto p-4 space-y-2 content-start">
+                        <!-- Words injected here -->
+                        <div class="text-center py-20 opacity-20 italic">Chọn album ở cột bên trái để xem từ vựng</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <form method="dialog" class="modal-backdrop"><button>close</button></form>
     </dialog>
 
     <script type="module" src="/src/main.js"></script>

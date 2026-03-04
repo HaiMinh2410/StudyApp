@@ -4,26 +4,14 @@
     themes: light --default, dark --prefersdark;
 }
 
-/* Custom Scrollbar for a premium look */
-.custom-scrollbar::-webkit-scrollbar {
-    width: 10px;
+/* Hide Scrollbar Global */
+*::-webkit-scrollbar {
+    display: none;
 }
 
-.custom-scrollbar::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 20px;
-    border: 3px solid transparent;
-    background-clip: content-box;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #94a3b8;
-    border: 3px solid transparent;
-    background-clip: content-box;
+* {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 
 .no-scrollbar::-webkit-scrollbar {
@@ -74,4 +62,31 @@
 
 .question {
     animation: fadeInUp 0.4s ease-out forwards;
+}
+
+/* My Word List Styles */
+#selectionPopup {
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.2s;
+    user-select: none;
+}
+
+#selectionPopup button {
+    @apply backdrop-blur-md bg-primary/90 hover:bg-primary hover:scale-105 active:scale-95 transition-all;
+}
+
+#wordListInAlbum>div {
+    @apply hover:shadow-lg hover:shadow-primary/5 hover:border-primary/20;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    display: block !important;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-base-300 rounded-full hover:bg-base-content/20 transition-colors;
 }
