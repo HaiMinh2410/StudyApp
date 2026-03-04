@@ -1,5 +1,8 @@
 @import "tailwindcss";
-@plugin "daisyui";
+
+@plugin "daisyui" {
+    themes: light --default, dark --prefersdark;
+}
 
 /* Custom Scrollbar for a premium look */
 .custom-scrollbar::-webkit-scrollbar {
@@ -21,6 +24,15 @@
     background: #94a3b8;
     border: 3px solid transparent;
     background-clip: content-box;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 
 /* Ensure drawer stays open on large screens but doesn't feel cramped */
