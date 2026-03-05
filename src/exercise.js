@@ -100,7 +100,7 @@ export function generateExercise() {
 
         if (answerKeyMatch) {
             answerSection = true;
-            const specificSectionMatch = line.match(/(exercise|bài|test|phần|đề|câu)[\s_]*\d+/i);
+            const specificSectionMatch = line.match(/(exercise|bài|test|phần|đề|câu|section|part|bài tập)[\s_]*\d+/i);
             if (specificSectionMatch) {
                 const snippet = specificSectionMatch[0].toLowerCase();
                 currentSectionInAnswers = snippet;
@@ -167,7 +167,7 @@ export function generateExercise() {
             return;
         }
 
-        const sectionMatch = line.match(/^(exercise|test|phần|đề|câu|bài)[\s_]*\d+/i);
+        const sectionMatch = line.match(/^(exercise|bài|test|phần|đề|câu|section|part|bài tập)[\s_]*\d+/i);
         if (sectionMatch) {
             currentSection = line.trim();
             answerSection = false;
