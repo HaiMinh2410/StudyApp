@@ -58,14 +58,29 @@ export function generateExercise() {
     if (typeof window.resetTimer === "function") window.resetTimer();
 
     const rawInput = document.getElementById("inputData").value;
-    const rawLines = rawInput.split("\n").map(l => l.trim());
-    const firstNonEmpty = rawLines.find(l => l) || "";
+    const rawLines = rawInput.split("\n").map(l => l.trim()).filter(l => l);
 
-    // Kiểm tra nếu dòng đầu tiên trông giống tiêu đề Section hoặc Câu hỏi
-    const isSectionOrQuestion = firstNonEmpty.match(/(exercise|test|phần|đề|câu|bài)[\s_]*\d+/i) ||
-        firstNonEmpty.match(/^(?:(?:câu|bài)[\s_]*)?(\d+)(?:[\.\):])/i);
+    // 1. Quét tìm tiêu đề có từ khóa (Header, Title, Tiêu đề, Chủ đề, v.v.)
+    let explicitTitle = "";
+    for (const line of rawLines) {
+        const titleMatch = line.match(/^(header|tiêu\s+đề|title|chủ\s+đề|subject|topic):\s*(.*)/i);
+        if (titleMatch && titleMatch[2].trim()) {
+            explicitTitle = titleMatch[2].trim();
+            break;
+        }
+        // Dừng tìm kiếm nếu đã bắt đầu vào câu hỏi hoặc section để tránh nhầm
+        if (line.match(/^(exercise|bài|test|phần|đề|câu|section|part)[\s_]*\d+/i) || line.match(/^(?:(?:câu|bài)[\s_]*)?(\d+)(?:[\.\):])/i)) break;
+    }
 
-    currentTitle = isSectionOrQuestion ? "No Title" : (firstNonEmpty || "No Title");
+    if (explicitTitle) {
+        currentTitle = explicitTitle;
+    } else {
+        // Fallback: Lấy dòng đầu tiên nếu không phải là câu hỏi/section
+        const firstNonEmpty = rawLines[0] || "";
+        const isSectionOrQuestion = firstNonEmpty.match(/^(exercise|bài(?:\s+(?:luyện\s+tập|tập))?|test|phần|đề|câu|section|part)[\s_]*\d+/i) ||
+            firstNonEmpty.match(/^(?:(?:câu|bài)[\s_]*)?(\d+)(?:[\.\):])/i);
+        currentTitle = isSectionOrQuestion ? "No Title" : (firstNonEmpty || "No Title");
+    }
 
     const raw = cleanText(rawInput);
     const lines = raw.split("\n").map(l => l.trim()).filter(l => l);
@@ -74,11 +89,20 @@ export function generateExercise() {
     let answerSection = false;
     let currentQuestion = null;
     let currentAnswerNumber = null;
+    let isAutoIncrementMode = true;
 
     let currentSection = null;
     let currentSectionInAnswers = null;
+    let questionCounterInSection = 1;
+    let answerCounterInSection = 1;
 
     lines.forEach(line => {
+        // --- 0. Skip Title/Header lines ---
+        if (line.match(/^(header|tiêu\s+đề|title|chủ\s+đề|subject|topic|head):\s*(.*)/i)) {
+            return;
+        }
+
+        // --- 1. Inline Answer / Explanation ---
         const inlineAnswerMatch = line.match(/^(đáp án|answer):\s*([A-D])/i);
         if (inlineAnswerMatch && currentQuestion) {
             currentQuestion.answer = inlineAnswerMatch[2].toUpperCase();
@@ -94,106 +118,248 @@ export function generateExercise() {
             return;
         }
 
-        const answerKeyMatch = line.match(/^(ANSWER KEY|ĐÁP ÁN|LỜI GIẢI|HƯỚNG DẪN GIẢI)(\s*:)?$/i) ||
-            (line.match(/^(ANSWER KEY|ĐÁP ÁN|LỜI GIẢI|HƯỚNG DẪN GIẢI)/i) && !line.match(/^(đáp án|answer):\s*[A-D]/i)) ||
-            (line.match(/ANSWER KEY|ĐÁP ÁN|LỜI GIẢI/i) && !line.match(/chọn|khoanh|hãy/i) && line.length < 50);
+        // --- 2. Answer Key Header ---
+        const answerKeyMatch = line.match(/^(ANSWER KEY|ĐÁP ÁN|LỜI GIẢI|HƯỚNG DẪN GIẢI|DETAILED EXPLANATIONS|PHÂN TÍCH BẪY)(\s*:)?$/i) ||
+            (line.match(/^(ANSWER KEY|ĐÁP ÁN|LỜI GIẢI|HƯỚNG DẪN GIẢI|DETAILED EXPLANATIONS|PHÂN TÍCH BẪY)/i) && !line.match(/^(đáp án|answer):\s*[A-D]/i)) ||
+            ((line.match(/ANSWER KEY|ĐÁP ÁN|LỜI GIẢI/i) || (line.match(/ANSWER/i) && line.match(/KEY/i))) && !line.match(/chọn|khoanh|hãy/i) && line.length < 100);
 
         if (answerKeyMatch) {
             answerSection = true;
-            const specificSectionMatch = line.match(/(exercise|bài|test|phần|đề|câu|section|part|bài tập)[\s_]*\d+/i);
-            if (specificSectionMatch) {
-                const snippet = specificSectionMatch[0].toLowerCase();
-                currentSectionInAnswers = snippet;
-            } else {
-                currentSectionInAnswers = null;
-            }
+            isAutoIncrementMode = true;
+            currentAnswerNumber = null; // Reset để không bám vào câu cuối của section trước
+            const subSectionMatch = line.match(/(exercise|bài(?:\s+(?:luyện\s+tập|tập))?|test|phần|đề|câu|section|part)[\s_]*\d+/i);
+            currentSectionInAnswers = subSectionMatch ? subSectionMatch[0].toLowerCase() : null;
+            answerCounterInSection = 1;
             return;
         }
 
-        if (answerSection) {
-            let answerStart = line.match(/^(\d+)[\.\)]\s*([A-D])/i);
-            if (answerStart) {
-                currentAnswerNumber = parseInt(answerStart[1]);
-                let q = questions.find(x => {
-                    const numMatch = x.number === currentAnswerNumber;
-                    if (!numMatch) return false;
-                    if (!currentSectionInAnswers) return true;
-                    return x.section && x.section.toLowerCase().includes(currentSectionInAnswers);
+        // --- 3. Section Header (QUAN TRỌNG: Check thoát hoặc chuyển section đáp án) ---
+        const sectionMatch = line.match(/^(exercise|bài(?:\s+(?:luyện\s+tập|tập))?|test|phần|đề|câu|section|part)[\s_]*\d+/i);
+        if (sectionMatch && line.length < 100) {
+            if (answerSection) {
+                // Heuristic: Nếu tiêu đề này đã xuất hiện trong danh sách câu hỏi, nó là sub-header của đáp án
+                const lowerLine = line.trim().toLowerCase();
+                const exists = questions.some(q => {
+                    const sec = q.section ? q.section.toLowerCase() : "";
+                    return sec.includes(lowerLine) || lowerLine.includes(sec);
                 });
-                if (!q) q = questions.find(x => x.number === currentAnswerNumber && !x.answer);
-                if (q) {
-                    q.answer = answerStart[2].toUpperCase();
-                    q.explanation = line.substring(answerStart[0].length).trim();
+                if (exists) {
+                    currentSectionInAnswers = sectionMatch[0].toLowerCase();
+                    answerCounterInSection = 1;
+                    isAutoIncrementMode = true;
+                    currentAnswerNumber = null; // Reset khi vào section đáp án mới
+                    return;
                 }
+            }
+            currentSection = line.trim();
+            questionCounterInSection = 1;
+            currentQuestion = null;
+            answerSection = false; // Force exit answer mode
+            currentAnswerNumber = null;
+            return;
+        }
+
+        // --- 4. Parse Answer Section ---
+        if (answerSection) {
+            const internalSectionMatch = line.match(/^(exercise|bài(?:\s+(?:luyện\s+tập|tập))?|test|phần|đề|câu|section|part)[\s_]*\d+/i);
+            if (internalSectionMatch && line.length < 120) {
+                currentSectionInAnswers = internalSectionMatch[0].toLowerCase();
+                answerCounterInSection = 1;
+                isAutoIncrementMode = true;
+                currentAnswerNumber = null; // Reset
                 return;
             }
-            if (currentAnswerNumber) {
-                let q = questions.find(x => x.number === currentAnswerNumber && (!currentSectionInAnswers || (x.section && x.section.toLowerCase().includes(currentSectionInAnswers))));
-                if (!q) q = questions.find(x => x.number === currentAnswerNumber);
+
+            // Patterns: 
+            // 1. "1. A - text" or "1. A" or "1. is working" -> qNumMatch
+            // 2. "A - text" (sequence based) -> ansLetterOnlyMatch
+            let qNumMatch = line.match(/^(\d+)[\.\)]\s*(.*)/);
+            let ansLetterOnlyMatch = line.match(/^([A-D])\s*[-–—:]\s*(.*)/i);
+
+            // Nhận diện giải thích thông minh và chính xác hơn
+            const explanationKeywords = [
+                "giải thích", "explanation", "dấu hiệu", "vì", "do", "tại", "bởi vì", "because", "since", "as",
+                "cấu trúc", "thì", "tense", "ngữ cảnh", "context", "hành động", "thời điểm", "trải nghiệm",
+                "thói quen", "vừa mới", "kết quả", "trạng thái", "lưu ý", "quy tắc", "mốc thời gian", "cụ thể", "bẫy", "trap"
+            ];
+
+            // Sử dụng word boundary \b cho các từ ngắn để tránh khớp nhầm (vd: "has" chứa "as")
+            const expRegex = new RegExp('\\b(' + explanationKeywords.join('|') + ')\\b', 'i');
+
+            const isExpPrefix = line.match(/^(giải thích|explanation|dấu hiệu|note|lưu ý|→|=>|->|vì|bởi|do|tại|since|because|bẫy|trap)/i);
+            const hasExpSymbol = line.includes("→") || line.includes("=>") || line.includes("->") || line.includes("=") || (line.includes(":") && line.length > 30);
+            const containsGrammarTerm = expRegex.test(line) || / (dùng|chia|thì|cấu trúc|loại|dạng) /i.test(line) || line.includes("“");
+
+            // Một dòng là giải thích nếu có prefix, có ký hiệu, hoặc chứa từ khóa ngữ pháp và đủ dài
+            const isExplanation = isExpPrefix || hasExpSymbol || (containsGrammarTerm && line.length > 25) || line.length > 100 || line.startsWith("(");
+
+            if (qNumMatch || ansLetterOnlyMatch) {
+                isAutoIncrementMode = false;
+                let qNum, remainder, letter = null;
+
+                if (qNumMatch) {
+                    qNum = parseInt(qNumMatch[1]);
+                    remainder = qNumMatch[2].trim();
+                } else {
+                    qNum = answerCounterInSection++;
+                    letter = ansLetterOnlyMatch[1].toUpperCase();
+                    remainder = ansLetterOnlyMatch[2].trim();
+                }
+
+                currentAnswerNumber = qNum;
+                let q = findQuestionByNumber(qNum, currentSectionInAnswers);
+
                 if (q) {
-                    q.explanation += "<br>" + line;
+                    if (letter) {
+                        q.answer = letter;
+                        if (remainder) q.explanation = (q.explanation ? q.explanation + "<br>" : "") + remainder;
+                    } else if (q.type === 'mcq') {
+                        let mcqMatch = remainder.match(/^([A-D])(?:[\s-–—:\.](.*))?$/i);
+                        if (mcqMatch) {
+                            q.answer = mcqMatch[1].toUpperCase();
+                            if (mcqMatch[2]) q.explanation = (q.explanation ? q.explanation + "<br>" : "") + mcqMatch[2].trim();
+                        } else {
+                            if (/^[A-D]$/i.test(remainder.charAt(0)) && (remainder.length === 1 || !/^\w/.test(remainder.charAt(1)))) {
+                                q.answer = remainder.charAt(0).toUpperCase();
+                                if (remainder.length > 2) q.explanation = (q.explanation ? q.explanation + "<br>" : "") + remainder.substring(1).trim();
+                            } else {
+                                q.answer = remainder;
+                            }
+                        }
+                    } else {
+                        q.answer = remainder;
+                    }
+                }
+                return;
+            } else if (line.trim().length > 0) {
+                // Kiểm tra xem dòng này có nhắc đến số câu cụ thể không (vd: "Giải thích câu 5")
+                let embeddedNumMatch = line.match(/(?:câu|question|q|số)\s*(\d+)/i);
+                if (embeddedNumMatch) {
+                    currentAnswerNumber = parseInt(embeddedNumMatch[1]);
+                }
+
+                let q = findQuestionByNumber(currentAnswerNumber, currentSectionInAnswers);
+
+                if (q && !q.answer && !isExplanation) {
+                    // Nếu câu hiện tại chưa có đáp án và dòng này không phải giải thích -> Đây là đáp án
+                    q.answer = line.trim();
+                } else if (isAutoIncrementMode && !isExplanation) {
+                    // Nếu đang ở chế độ Auto Increment (danh sách đáp án không số)
+                    let nextQ = questions.find(x => !x.answer && (currentSectionInAnswers ? (x.section || "").toLowerCase().includes(currentSectionInAnswers) : true));
+                    if (nextQ) {
+                        nextQ.answer = line.trim();
+                        currentAnswerNumber = nextQ.number;
+                    }
+                } else if (currentAnswerNumber) {
+                    // Mặc định: Dồn vào giải thích của câu đang xử lý
+                    let targetQ = findQuestionByNumber(currentAnswerNumber, currentSectionInAnswers);
+                    if (targetQ) targetQ.explanation += (targetQ.explanation ? "<br>" : "") + line;
                 }
             }
             return;
         }
 
-        let qMatch = line.match(/^(?:(?:câu|bài)[\s_]*)?(\d+)(?:[\.\):])\s*(.*)/i);
-        if (qMatch) {
-            let num = parseInt(qMatch[1]);
-            let content = qMatch[2];
+        function findQuestionByNumber(num, section) {
+            let q = questions.find(x => {
+                if (x.number !== num) return false;
+                if (!section) return true;
+                const sec = (x.section || "").toLowerCase();
+                const ansSec = section.toLowerCase();
+                if (sec.includes(ansSec) || ansSec.includes(sec)) return true;
+                const n1 = sec.match(/\d+/);
+                const n2 = ansSec.match(/\d+/);
+                return n1 && n2 && n1[0] === n2[0];
+            });
+            if (!q) q = questions.find(x => x.number === num && !x.answer);
+            if (!q) q = questions.find(x => x.number === num);
+            return q;
+        }
 
-            let existing = questions.find(x => x.number === num && x.section === currentSection);
-            if (existing && !answerSection) {
-                if (existing.options.length === 0 && !existing.answer) {
-                    existing.type = 'fitb';
-                    existing.answer = extractFitbAnswer(existing.text, content);
-                    existing.fullAnswer = content;
+
+        // --- 5. Numbered Question ---
+        let qNumMatch = line.match(/^(?:(?:câu|bài)[\s_]*)?(\d+)(?:[\.\):])\s*(.*)/i);
+        if (qNumMatch) {
+            let num = parseInt(qNumMatch[1]);
+            let content = qNumMatch[2];
+            // Tránh nhận diện nhầm các dòng chỉ dẫn là câu hỏi
+            if (content.length < 3 && !line.includes("___")) return;
+
+            let existingIdx = questions.findIndex(x => x.number === num && x.section === currentSection);
+            if (existingIdx !== -1 && !answerSection) {
+                // Nếu câu hỏi cũ không có text thật sự (chỉ là title/instruction bị bắt nhầm) hoặc không có options, ta cho phép ghi đè
+                if (questions[existingIdx].options.length === 0 && !questions[existingIdx].text.includes("___")) {
+                    questions.splice(existingIdx, 1);
+                } else {
+                    return;
                 }
-                return;
             }
 
+            questionCounterInSection = num + 1;
             currentQuestion = {
-                id: questions.length,
-                number: num,
-                section: currentSection,
-                text: content,
-                options: [],
-                answer: null,
-                explanation: "",
-                type: 'mcq',
-                isCapturingExplanation: false
+                id: questions.length, number: num, section: currentSection,
+                text: content, options: [], answer: null, explanation: "",
+                type: 'mcq', isCapturingExplanation: false
             };
+            if (content.includes("___") || (content.includes("(") && content.includes(")"))) currentQuestion.type = 'fitb';
             questions.push(currentQuestion);
             return;
         }
 
-        const sectionMatch = line.match(/^(exercise|bài|test|phần|đề|câu|section|part|bài tập)[\s_]*\d+/i);
-        if (sectionMatch) {
-            currentSection = line.trim();
-            answerSection = false;
-            currentQuestion = null;
+        // --- 6. Multiple Choice Option ---
+        if (/^[A-D][\.\)-]\s*/.test(line)) {
+            if (currentQuestion) {
+                currentQuestion.options.push(line);
+                currentQuestion.type = 'mcq';
+            }
             return;
         }
 
-        if (currentQuestion && /^[A-D][\.\)]\s*/.test(line)) {
-            currentQuestion.options.push(line);
-            currentQuestion.isCapturingExplanation = false;
-            return;
-        }
-
+        // --- 7. Explanation Arrow ---
         if (line.startsWith("→") && currentQuestion) {
             currentQuestion.explanation = (currentQuestion.explanation ? currentQuestion.explanation + "<br>" : "") + line.substring(1).trim();
             return;
         }
 
-        if (currentQuestion) {
-            if (currentQuestion.isCapturingExplanation) {
-                currentQuestion.explanation += (currentQuestion.explanation ? "<br>" : "") + line;
-            } else if (currentQuestion.options.length === 0) {
-                currentQuestion.text = (currentQuestion.text ? currentQuestion.text + " " : "") + line;
+        // --- 8. Unnumbered Question or Continued Text ---
+        if (!answerSection) {
+            const hasBlank = /__+/.test(line) || (line.includes(" (") && line.includes(")"));
+            const isOption = /^[A-D][\.\)-]\s*/.test(line);
+
+            // Một câu hỏi mới nếu dòng có blank hoặc câu trước đã có options
+            const shouldStartNew = !currentQuestion ||
+                (currentQuestion.options.length > 0 && !isOption) ||
+                (currentQuestion.type === 'fitb' && hasBlank);
+
+            if (shouldStartNew && !isOption && (hasBlank || line.length > 10)) {
+                currentQuestion = {
+                    id: questions.length, number: questionCounterInSection++, section: currentSection,
+                    text: line, options: [], answer: null, explanation: "",
+                    type: hasBlank ? 'fitb' : 'mcq', isCapturingExplanation: false
+                };
+                questions.push(currentQuestion);
+            } else if (currentQuestion) {
+                if (isOption) {
+                    currentQuestion.options.push(line);
+                    currentQuestion.type = 'mcq';
+                } else {
+                    currentQuestion.text = (currentQuestion.text ? currentQuestion.text + " " : "") + line;
+                    if (hasBlank) currentQuestion.type = 'fitb';
+                }
             }
         }
     });
+
+    // --- Post-processing: Match Free-text Answers ---
+    // Duyệt lại các dòng một lần nữa để tìm đáp án cho FITB nếu mục Answer Key chưa khớp hết
+    lines.forEach(line => {
+        if (!line.includes("ANSWER KEY") && !line.match(/ĐÁP ÁN|LỜI GIẢI/i)) return; // Chỉ tìm sau khi có header đáp án
+    });
+    // (Logic này đã được tích hợp vào bước xử lý line phía trên, 
+    // nhưng ta cần thêm một fallback cho các đáp án không số trong FITB)
+
+    // Cập nhật lại logic tìm đáp án trong loop chính để xử lý case "không số, không chữ"
+    // (Tôi sẽ sửa trực tiếp trong ReplacementChunk phía trên để tối ưu)
+
 
     const errors = [];
     if (questions.length === 0) {
@@ -443,7 +609,7 @@ function processSubmission(review = false) {
         exp.classList.remove("hidden", "bg-success/10", "border-success", "bg-error/10", "border-error");
 
         const isCorrect = q.type === 'fitb'
-            ? user.toLowerCase() === q.answer.toLowerCase()
+            ? q.answer.split('/').some(a => a.trim().toLowerCase() === user.toLowerCase())
             : user === q.answer;
 
         if (isCorrect) {

@@ -1,6 +1,8 @@
 import './style.css';
 import './album.js';
 import './exercise.js';
+import './prompt_manager.js';
+import { renderPromptList } from './prompt_manager.js';
 
 import { getExerciseState, setExerciseState } from './exercise.js';
 
@@ -317,3 +319,27 @@ document.getElementById("mainContent")?.addEventListener("scroll", handleScroll)
 
 // Initial history on load
 renderHistory();
+renderPromptList();
+
+/* =========================
+   PROMPT MODAL LOGIC
+========================= */
+export function copyPrompt() {
+    const promptText = document.getElementById("promptText").innerText;
+    navigator.clipboard.writeText(promptText).then(() => {
+        const btn = document.getElementById("copyPromptBtn");
+        const originalText = btn.innerHTML;
+        btn.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            <span>Copied!</span>
+        `;
+        btn.classList.replace("btn-primary", "btn-success");
+        setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.classList.replace("btn-success", "btn-primary");
+        }, 2000);
+    });
+}
+window.copyPrompt = copyPrompt;
