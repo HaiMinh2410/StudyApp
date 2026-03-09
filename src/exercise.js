@@ -97,8 +97,11 @@ export function generateExercise() {
     let answerCounterInSection = 1;
 
     lines.forEach((line, index) => {
-        // --- 0. Skip Title/Header lines ---
-        if (line.match(/^(header|tiêu\s+đề|title|chủ\s+đề|subject|topic|head):\s*(.*)/i)) {
+        // --- 0. Skip Title/Header/Intro lines ---
+        const isHeaderOrIntro = line.match(/^(header|tiêu\s+đề|title|chủ\s+đề|subject|topic|head|instruction|hướng\s+dẫn|note|lưu\s+ý|yêu\s+cầu):\s*(.*)/i) ||
+            (/^(choose|hãy|chọn|điền|hoàn\s+thành|complete|questions?\s*\(?\d+)/i.test(line) && line.length < 120 && !line.includes("___"));
+
+        if (isHeaderOrIntro && questions.length === 0 && !answerSection) {
             return;
         }
 
@@ -119,9 +122,9 @@ export function generateExercise() {
         }
 
         // --- 2. Answer Key Header ---
-        const answerKeyMatch = line.match(/^(ANSWER KEY|ĐÁP ÁN|LỜI GIẢI|HƯỚNG DẪN GIẢI|DETAILED EXPLANATIONS|PHÂN TÍCH BẪY)(\s*:)?$/i) ||
+        const answerKeyMatch = line.match(/^(ANSWER KEY|ĐÁP ÁN|LỜI GIẢI|HƯỚNG DẪN GIẢI|DETAILED EXPLANATIONS|PHÂN TÍCH BẪY|EXPLANATIONS?|ANSWER & KEY|HƯỚNG DẪN CHI TIẾT)(\s*:)?$/i) ||
             (line.match(/^(ANSWER KEY|ĐÁP ÁN|LỜI GIẢI|HƯỚNG DẪN GIẢI|DETAILED EXPLANATIONS|PHÂN TÍCH BẪY)/i) && !line.match(/^(đáp án|answer):\s*[A-D]/i)) ||
-            ((line.match(/ANSWER KEY|ĐÁP ÁN|LỜI GIẢI/i) || (line.match(/ANSWER/i) && line.match(/KEY/i))) && !line.match(/chọn|khoanh|hãy/i) && line.length < 100);
+            ((line.match(/ANSWER KEY|ĐÁP ÁN|LỜI GIẢI|ANSWER & EXPLANATION/i) || (line.match(/ANSWER/i) && line.match(/KEY/i))) && !line.match(/chọn|khoanh|hãy/i) && line.length < 120);
 
         if (answerKeyMatch) {
             answerSection = true;
@@ -336,8 +339,9 @@ export function generateExercise() {
                 (currentQuestion.type === 'fitb' && hasBlank);
 
             // Chỉ bắt đầu câu hỏi mới nếu dòng này trông thực sự giống câu hỏi (có blank hoặc theo sau là option)
-            // Điều này giúp loại bỏ các dòng hướng dẫn thừa sau tiêu đề Exercise
-            const looksLikeQuestion = hasBlank || isNextOption;
+            // và KHÔNG phải là một tiêu đề hướng dẫn (ví dụ: "Questions (1-20)")
+            const isLabel = /^(questions?|câu\s+hỏi|bài\s+tập|đề\s+bài|phần|part|section|exercise|bài|test|instruction|hướng\s+dẫn)/i.test(line) && line.length < 100 && !line.includes("___");
+            const looksLikeQuestion = (hasBlank || isNextOption) && !isLabel;
 
             if (shouldStartNew && !isOption && looksLikeQuestion) {
                 currentQuestion = {
