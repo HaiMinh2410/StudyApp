@@ -48,6 +48,20 @@ export function extractFitbAnswer(qText, aText) {
     }
     return result;
 }
+export function normalizeAnswer(text) {
+    if (!text) return "";
+    return text.toLowerCase()
+        .replace(/[‘’'ʼ`]/g, "'")           // Chuẩn hóa các loại dấu nháy
+        .replace(/\s*([\/\\|])\s*/g, "$1")  // Xóa khoảng trắng quanh dấu gạch chéo, gạch đứng
+        .replace(/n't\b/g, " not")          // Mở rộng các dạng viết tắt phổ biến
+        .replace(/'s\b/g, " is")
+        .replace(/'ve\b/g, " have")
+        .replace(/'re\b/g, " are")
+        .replace(/'ll\b/g, " will")
+        .replace(/'d\b/g, " would")
+        .replace(/\s+/g, " ")               // Chuẩn hóa khoảng trắng dư thừa
+        .trim();
+}
 
 /* =========================
    GENERATE EXERCISE
@@ -625,8 +639,9 @@ function processSubmission(review = false) {
         div.classList.remove("border-success", "bg-success/5", "border-error", "bg-error/5");
         exp.classList.remove("hidden", "bg-success/10", "border-success", "bg-error/10", "border-error");
 
+        const normUser = normalizeAnswer(user);
         const isCorrect = q.type === 'fitb'
-            ? q.answer.split('/').some(a => a.trim().toLowerCase() === user.toLowerCase())
+            ? (normalizeAnswer(q.answer) === normUser || q.answer.split('/').some(a => normalizeAnswer(a) === normUser))
             : user === q.answer;
 
         if (isCorrect) {
