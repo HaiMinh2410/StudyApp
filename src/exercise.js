@@ -7,6 +7,7 @@ let questions = [];
 let userAnswers = {};
 let isReviewMode = false;
 let currentTitle = "No Title";
+let currentWrongIdx = -1;
 
 export function getExerciseState() {
     return { questions, userAnswers, isReviewMode };
@@ -491,6 +492,50 @@ export function updateButtonStates() {
 
     submitBtns.forEach(btn => btn.disabled = !hasQ || isReviewMode || !hasAnswer);
     resetBtns.forEach(btn => btn.disabled = !hasQ || !hasAnswer);
+
+    // Xử lý hiển thị button Next Wrong
+    const nextWrongBtns = document.querySelectorAll("#nextWrongBottomBtn, #nextWrongDesktopBtn");
+    let hasWrong = false;
+    if (isReviewMode) {
+        hasWrong = questions.some(q => {
+            const user = userAnswers[q.id];
+            return q.type === 'fitb'
+                ? !q.answer.split('/').some(a => normalizeAnswer(a) === normalizeAnswer(user))
+                : user !== q.answer;
+        });
+    }
+
+    nextWrongBtns.forEach(btn => {
+        if (isReviewMode && hasWrong) {
+            btn.classList.remove("hidden");
+        } else {
+            btn.classList.add("hidden");
+        }
+    });
+}
+
+export function nextWrongQuestion() {
+    if (!isReviewMode) return;
+
+    const wrongQuestions = questions.filter(q => {
+        const user = userAnswers[q.id];
+        const isCorrect = q.type === 'fitb'
+            ? q.answer.split('/').some(a => normalizeAnswer(a) === normalizeAnswer(user))
+            : user === q.answer;
+        return !isCorrect;
+    });
+
+    if (wrongQuestions.length === 0) return;
+
+    currentWrongIdx = (currentWrongIdx + 1) % wrongQuestions.length;
+    const targetQ = wrongQuestions[currentWrongIdx];
+    const element = document.getElementById("q" + targetQ.id);
+
+    if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        element.classList.add('ring-4', 'ring-error/30');
+        setTimeout(() => element.classList.remove('ring-4', 'ring-error/30'), 2000);
+    }
 }
 
 /* =========================
@@ -618,6 +663,7 @@ function processSubmission(review = false) {
     if (!review) userAnswers = {};
 
     let firstWrongId = null;
+    currentWrongIdx = -1; // Reset index câu sai khi nộp bài mới
 
     questions.forEach(q => {
         let selectedValue = "";
@@ -760,6 +806,7 @@ export function resetExercise() {
     if (questions.length === 0) return;
     userAnswers = {};
     isReviewMode = false;
+    currentWrongIdx = -1;
     if (typeof window.resetTimer === "function") window.resetTimer();
     renderExercise();
     updateButtonStates();
@@ -784,3 +831,4 @@ window.resetExercise = resetExercise;
 window.updateInputButtons = updateInputButtons;
 window.updateButtonStates = updateButtonStates;
 window.renderExercise = renderExercise;
+window.nextWrongQuestion = nextWrongQuestion;
