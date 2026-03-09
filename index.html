@@ -379,6 +379,23 @@
         </form>
     </dialog>
 
+    <!-- Custom Modal for Results -->
+    <dialog id="resultModal" class="modal modal-bottom sm:modal-middle">
+        <div class="modal-box text-center">
+            <div id="resultIcon" class="mb-4">
+                <!-- Icon will be injected here -->
+            </div>
+            <h3 class="font-black text-2xl mb-2" id="resultTitle">Kết quả</h3>
+            <p class="py-4 text-lg font-medium" id="resultMessage"></p>
+            <div class="modal-action justify-center">
+                <button class="btn btn-primary px-10" onclick="window.confirmResult()">Xem chi tiết</button>
+            </div>
+        </div>
+        <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form>
+    </dialog>
+
     <!-- Multi-purpose Modals & Popups -->
 
     <!-- Selection Tooltip -->

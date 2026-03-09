@@ -96,7 +96,7 @@ export function generateExercise() {
     let questionCounterInSection = 1;
     let answerCounterInSection = 1;
 
-    lines.forEach(line => {
+    lines.forEach((line, index) => {
         // --- 0. Skip Title/Header lines ---
         if (line.match(/^(header|tiêu\s+đề|title|chủ\s+đề|subject|topic|head):\s*(.*)/i)) {
             return;
@@ -322,15 +322,24 @@ export function generateExercise() {
 
         // --- 8. Unnumbered Question or Continued Text ---
         if (!answerSection) {
-            const hasBlank = /__+/.test(line) || (line.includes(" (") && line.includes(")"));
-            const isOption = /^[A-D][\.\)-]\s*/.test(line);
+            // Nhận diện khoảng trống (blank) linh hoạt hơn: gạch dưới hoặc dấu chấm
+            const hasBlank = /__+|\.{3,}/.test(line) || (line.includes(" (") && line.includes(")"));
+            const isOption = /^[A-D][\.\)-]\s*/.test(line); // Thường đã được Block 6 xử lý
 
-            // Một câu hỏi mới nếu dòng có blank hoặc câu trước đã có options
+            // Kiểm tra dòng tiếp theo để nhận diện câu hỏi trắc nghiệm không số
+            const nextLine = lines[index + 1] || "";
+            const isNextOption = /^[A-D][\.\)-]\s*/.test(nextLine);
+
+            // Một câu hỏi mới nếu dòng có blank hoặc là đoạn dẫn cho một danh sách lựa chọn
             const shouldStartNew = !currentQuestion ||
                 (currentQuestion.options.length > 0 && !isOption) ||
                 (currentQuestion.type === 'fitb' && hasBlank);
 
-            if (shouldStartNew && !isOption && (hasBlank || line.length > 10)) {
+            // Chỉ bắt đầu câu hỏi mới nếu dòng này trông thực sự giống câu hỏi (có blank hoặc theo sau là option)
+            // Điều này giúp loại bỏ các dòng hướng dẫn thừa sau tiêu đề Exercise
+            const looksLikeQuestion = hasBlank || isNextOption;
+
+            if (shouldStartNew && !isOption && looksLikeQuestion) {
                 currentQuestion = {
                     id: questions.length, number: questionCounterInSection++, section: currentSection,
                     text: line, options: [], answer: null, explanation: "",
@@ -342,6 +351,8 @@ export function generateExercise() {
                     currentQuestion.options.push(line);
                     currentQuestion.type = 'mcq';
                 } else {
+                    // Nếu không phải bắt đầu câu hỏi mới và cũng không phải option, 
+                    // ta coi đây là văn bản tiếp nối của câu hỏi hiện tại
                     currentQuestion.text = (currentQuestion.text ? currentQuestion.text + " " : "") + line;
                     if (hasBlank) currentQuestion.type = 'fitb';
                 }
@@ -588,6 +599,8 @@ function processSubmission(review = false) {
     let correct = 0;
     if (!review) userAnswers = {};
 
+    let firstWrongId = null;
+
     questions.forEach(q => {
         let selectedValue = "";
         if (q.type === 'fitb') {
@@ -619,6 +632,7 @@ function processSubmission(review = false) {
         } else {
             div.classList.add("border-error", "bg-error/5");
             exp.classList.add("bg-error/20", "border-error");
+            if (firstWrongId === null) firstWrongId = "q" + q.id;
         }
 
         exp.classList.remove("hidden");
@@ -666,6 +680,57 @@ function processSubmission(review = false) {
         }
         isReviewMode = true;
         updateButtonStates();
+
+        // Show Result Modal
+        showResultModal(correct, questions.length, firstWrongId);
+    }
+}
+
+function showResultModal(correct, total, firstWrongId) {
+    const modal = document.getElementById('resultModal');
+    const title = document.getElementById('resultTitle');
+    const message = document.getElementById('resultMessage');
+    const iconContainer = document.getElementById('resultIcon');
+
+    if (!modal || !title || !message) return;
+
+    const percent = Math.round((correct / total) * 100);
+    const isSuccess = percent >= 80;
+
+    title.innerText = isSuccess ? "Chúc mừng!" : "Cần cố gắng!";
+    title.className = `font-black text-3xl mb-2 ${isSuccess ? 'text-success' : 'text-warning'}`;
+    message.innerHTML = `Bạn đã hoàn thành bài tập với kết quả:<br><span class="text-2xl font-bold">${correct}/${total} câu (${percent}%)</span>`;
+
+    if (iconContainer) {
+        iconContainer.innerHTML = isSuccess
+            ? `<div class="w-20 h-20 bg-success/10 text-success rounded-full flex items-center justify-center mx-auto mb-4 animate-bounce">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                </svg>
+               </div>`
+            : `<div class="w-20 h-20 bg-warning/10 text-warning rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+               </div>`;
+    }
+
+    // Attach firstWrongId to window for confirmResult
+    window.__lastFirstWrongId = firstWrongId;
+    modal.showModal();
+}
+
+export function confirmResult() {
+    const modal = document.getElementById('resultModal');
+    if (modal) modal.close();
+
+    if (window.__lastFirstWrongId) {
+        const element = document.getElementById(window.__lastFirstWrongId);
+        if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            element.classList.add('ring-4', 'ring-error/30');
+            setTimeout(() => element.classList.remove('ring-4', 'ring-error/30'), 3000);
+        }
     }
 }
 
@@ -695,6 +760,7 @@ window.generateExercise = generateExercise;
 window.clearInput = clearInput;
 window.submitAnswers = submitAnswers;
 window.processSubmission = processSubmission;
+window.confirmResult = confirmResult;
 window.resetExercise = resetExercise;
 window.updateInputButtons = updateInputButtons;
 window.updateButtonStates = updateButtonStates;
