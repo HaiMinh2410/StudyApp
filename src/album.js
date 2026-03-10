@@ -327,12 +327,12 @@ export function renderSideAlbumList() {
             <button onclick="window.deleteAlbumById(${a.id})" 
                 class="btn btn-ghost btn-circle btn-xs absolute right-3 text-error/60 lg:text-error lg:opacity-0 group-hover:opacity-100 transition-all" 
                 title="Xóa Album">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                </svg>
+                <i data-lucide="trash-2" class="h-3.5 w-3.5"></i>
             </button>
         </div>
     `).join("");
+
+    if (window.lucide) window.lucide.createIcons();
 }
 
 export function deleteAlbumById(id) {
@@ -573,9 +573,7 @@ export function renderWordListOnly() {
         if (!hasWords) {
             list.innerHTML = `
                 <div class="flex flex-col items-center justify-center py-20 opacity-30 grayscale gap-4">
-                     <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                    </svg>
+                     <i data-lucide="book-open" class="h-16 w-16"></i>
                     <p class="italic">Chưa có từ vựng nào trong album này.</p>
                 </div>`;
         } else {
@@ -615,26 +613,26 @@ export function renderWordListOnly() {
                         <div class="flex items-center gap-1 shrink-0">
                             <div class="hidden lg:flex items-center gap-1">
                                 <button onclick="window.speakWord('${word.replace(/'/g, "\\'")}')" class="btn btn-ghost btn-circle btn-sm opacity-0 group-hover:opacity-100 transition-all font-medium" title="Nghe phát âm">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" /></svg>
+                                    <i data-lucide="volume-2" class="h-4 w-4"></i>
                                 </button>
                                 <button onclick="window.openEditWordModal('${word.replace(/'/g, "\\'")}', '${type.replace(/'/g, "\\'")}', '${phonetic.replace(/'/g, "\\'")}', '${meaning.replace(/'/g, "\\'")}')" class="btn btn-ghost btn-circle btn-sm opacity-0 group-hover:opacity-100 transition-all text-secondary" title="Sửa từ vựng">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                                    <i data-lucide="edit-3" class="h-4 w-4"></i>
                                 </button>
                                 <button onclick="window.removeWordFromAlbum(${currentViewAlbumId}, '${word.replace(/'/g, "\\'")}')" class="btn btn-ghost btn-circle btn-sm text-error opacity-0 group-hover:opacity-100 transition-all" title="Xóa từ vựng">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                    <i data-lucide="trash-2" class="h-4 w-4"></i>
                                 </button>
                             </div>
                             <div class="flex lg:hidden items-center gap-1">
                                 <button onclick="window.speakWord('${word.replace(/'/g, "\\'")}')" class="btn btn-ghost btn-circle btn-sm" title="Nghe phát âm">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" /></svg>
+                                    <i data-lucide="volume-2" class="h-4 w-4"></i>
                                 </button>
                                 <div class="dropdown dropdown-end">
                                     <div tabindex="0" role="button" class="btn btn-ghost btn-circle btn-sm">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" /></svg>
+                                        <i data-lucide="more-vertical" class="h-5 w-5"></i>
                                     </div>
                                     <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-32 border border-base-300">
-                                        <li><a onclick="window.openEditWordModal('${word.replace(/'/g, "\\'")}', '${type.replace(/'/g, "\\'")}', '${phonetic.replace(/'/g, "\\'")}', '${meaning.replace(/'/g, "\\'")}')" class="flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg> Sửa</a></li>
-                                        <li><a onclick="window.removeWordFromAlbum(${currentViewAlbumId}, '${word.replace(/'/g, "\\'")}')" class="flex items-center gap-2 text-error"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg> Xóa</a></li>
+                                        <li><a onclick="window.openEditWordModal('${word.replace(/'/g, "\\'")}', '${type.replace(/'/g, "\\'")}', '${phonetic.replace(/'/g, "\\'")}', '${meaning.replace(/'/g, "\\'")}')" class="flex items-center gap-2"><i data-lucide="edit-3" class="h-4 w-4"></i> Sửa</a></li>
+                                        <li><a onclick="window.removeWordFromAlbum(${currentViewAlbumId}, '${word.replace(/'/g, "\\'")}')" class="flex items-center gap-2 text-error"><i data-lucide="trash-2" class="h-4 w-4"></i> Xóa</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -645,6 +643,7 @@ export function renderWordListOnly() {
             }).join("");
         }
     }
+    if (window.lucide) window.lucide.createIcons();
 }
 
 export function speakWord(text) {

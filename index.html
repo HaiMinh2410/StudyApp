@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>English Practice App</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 
 <body class="bg-base-200 min-h-screen font-sans">
@@ -13,85 +14,66 @@
     <div class="drawer">
         <input id="my-drawer" type="checkbox" class="drawer-toggle" />
 
-        <div class="drawer-content flex flex-col h-screen overflow-hidden bg-base-200">
+        <div class="drawer-content flex flex-col h-screen overflow-hidden bg-base-200 relative">
             <!-- Navbar -->
-            <header class="navbar bg-primary text-primary-content sticky top-0 z-50 shadow-md lg:shadow-sm px-4">
+            <header id="appHeader"
+                class="fixed top-0 left-0 right-0 z-50 bg-primary text-primary-content shadow-md lg:shadow-sm transition-transform duration-300">
+                <div class="navbar max-w-6xl mx-auto px-4">
+                    <div class="flex-1">
+                        <a onclick="document.getElementById('mainContent').scrollTo({top:0,behavior:'smooth'})"
+                            class="btn btn-ghost max-md:px-0 text-xl font-black tracking-tight uppercase cursor-pointer">English
+                            Practice</a>
+                    </div>
+                    <div class="flex-none max-sm:gap-0 max-sm:px-0 gap-2 px-2 flex items-center">
+                        <!-- My Word List Button -->
+                        <button onclick="window.openWordListModal()" class="btn btn-ghost btn-circle"
+                            title="My Word List">
+                            <i data-lucide="book" class="size-5 sm:size-6"></i>
+                        </button>
 
-                <div class="flex-1">
-                    <a onclick="document.getElementById('mainContent').scrollTo({top:0,behavior:'smooth'})"
-                        class="btn btn-ghost text-xl font-black tracking-tight uppercase cursor-pointer">English
-                        Practice</a>
-                </div>
-                <div class="flex-none gap-2 px-2 flex items-center">
-                    <!-- My Word List Button -->
-                    <button onclick="window.openWordListModal()" class="btn btn-ghost btn-circle" title="My Word List">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                        </svg>
-                    </button>
-
-                    <!-- Theme Toggle -->
-                    <button id="themeToggle" class="btn btn-ghost btn-circle">
-                        <!-- Sun icon (visible in dark mode) -->
-                        <svg id="sunIcon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                            stroke-width="2" stroke="currentColor" class="hidden w-6 h-6 text-yellow-400">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M3 12h2.25m.386-6.364l1.591 1.591M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
-                        </svg>
-                        <!-- Moon icon (visible in light mode) -->
-                        <svg id="moonIcon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                            stroke-width="2" stroke="currentColor" class="w-6 h-6">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
-                        </svg>
-                    </button>
-                </div>
-                <div class="flex-none">
-                    <label for="my-drawer" class="btn btn-square btn-ghost">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                            class="inline-block w-6 h-6 stroke-current">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4 6h16M4 12h16M4 18h16"></path>
-                        </svg>
-                    </label>
+                        <!-- Theme Toggle -->
+                        <button id="themeToggle" class="btn btn-ghost btn-circle">
+                            <!-- Sun icon (visible in dark mode) -->
+                            <i id="sunIcon" data-lucide="sun" class="hidden size-5 sm:size-6 text-yellow-400"></i>
+                            <!-- Moon icon (visible in light mode) -->
+                            <i id="moonIcon" data-lucide="moon" class="size-5 sm:size-6"></i>
+                        </button>
+                    </div>
+                    <div class="flex-none">
+                        <label for="my-drawer" class="btn btn-square btn-ghost">
+                            <i data-lucide="menu" class="size-5 sm:size-6"></i>
+                        </label>
+                    </div>
                 </div>
             </header>
 
             <!-- Page Content -->
-            <main id="mainContent" class="flex-1 overflow-hidden overflow-y-auto custom-scrollbar">
-                <div class="max-w-6xl mx-auto p-4 lg:p-10 space-y-8 pb-32 lg:pb-12">
+            <main id="mainContent" class="flex-1 overflow-hidden overflow-y-auto custom-scrollbar pt-16 md:pt-20">
+                <div class="max-w-6xl mx-auto p-4 lg:p-10 lg:px-0 space-y-4 md:space-y-8 pb-32 lg:pb-12">
 
                     <!-- Hero Section / Welcome -->
                     <section class="space-y-2">
-                        <h1 class="text-3xl lg:text-4xl font-extrabold text-base-content tracking-tight">Practice
+                        <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-base-content tracking-tight">
+                            Practice
                             Dashboard</h1>
-                        <p class="text-base-content/60">Generate and evaluate your English multi-choice questions in
+                        <p class="max-sm:text-sm text-base-content/60">Generate and evaluate your English multi-choice
+                            questions in
                             seconds.</p>
                     </section>
 
                     <!-- Create Exercise card -->
                     <section class="card bg-base-100 shadow-sm border border-base-300">
-                        <div class="card-body gap-6">
+                        <div class="card-body gap-4 md:gap-6 max-sm:p-4">
                             <div class="flex items-center gap-3">
                                 <div
-                                    class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M12 4v16m8-8H4" />
-                                    </svg>
+                                    class="size-8 sm:size-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                                    <i data-lucide="plus" class="size-5 sm:size-6"></i>
                                 </div>
-                                <h2 class="card-title text-2xl font-bold flex-1">New Exercise</h2>
+                                <h2 class="card-title text-xl sm:text-2xl font-bold flex-1">New Exercise</h2>
                                 <button onclick="promptModal.showModal()"
                                     class="btn btn-circle btn-ghost btn-sm text-primary hover:bg-primary/10 transition-all"
                                     title="Xem prompt gợi ý">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
+                                    <i data-lucide="info" class="h-5 w-5"></i>
                                 </button>
                             </div>
 
@@ -99,11 +81,12 @@
                                 <label class="label w-full">
                                     <span class="hidden md:block label-text font-medium">Input MCQ or Fill-in-blank
                                         Data</span>
-                                    <span class="label-text-alt opacity-60">Questions + (Options/Answer) +
+                                    <span class="max-sm:text-xs label-text-alt opacity-60">Questions + (Options/Answer)
+                                        +
                                         Explanation</span>
                                 </label>
                                 <textarea id="inputData"
-                                    class="textarea w-full textarea-bordered h-64 focus:textarea-primary transition-all no-scrollbar outline-none"
+                                    class="textarea w-full textarea-bordered h-64 focus:textarea-primary transition-all no-scrollbar outline-none max-sm:placeholder:text-xs"
                                     placeholder="MCQ:&#10;1. Question?&#10;A) Opt1&#10;B) Opt2&#10;ANSWER KEY&#10;1. A) Explanation&#10;&#10;Fill-blank:&#10;1. Question __________ (hint).&#10;1. Question answer.&#10;→ Explanation"></textarea>
 
                                 <!-- Error Alert (Hidden by default) -->
@@ -111,11 +94,7 @@
                                     class="hidden alert alert-error shadow-lg mt-4 animate-in fade-in slide-in-from-top-2 duration-300">
                                     <div class="flex flex-col items-start gap-1 w-full text-error-content">
                                         <div class="flex items-center gap-2 font-bold mb-1">
-                                            <svg xmlns="http://www.w3.org/2000/svg"
-                                                class="stroke-current shrink-0 h-5 w-5" fill="none" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                            </svg>
+                                            <i data-lucide="alert-triangle" class="h-5 w-5"></i>
                                             <span>Lỗi định dạng dữ liệu</span>
                                         </div>
                                         <ul id="errorList" class="list-disc list-inside text-xs space-y-1 opacity-90">
@@ -135,21 +114,13 @@
                                 </div>
                                 <div class="flex max-md:justify-between max-md:w-full gap-2">
                                     <button id="clearInputBtn" disabled onclick="clearInput()"
-                                        class="btn btn-ghost btn-lg max-sm:text-sm sm:px-8 gap-2">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                        </svg>
+                                        class="btn btn-ghost btn-lg max-sm:text-sm px-6 sm:px-8 gap-2">
+                                        <i data-lucide="trash-2" class="h-5 w-5"></i>
                                         Clear
                                     </button>
                                     <button id="generateExerciseBtn" disabled onclick="generateExercise()"
-                                        class="btn btn-primary btn-lg px-8 sm:px-12 gap-2 shadow-lg shadow-primary/20">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M13 10V3L4 14h7v7l9-11h-7z" />
-                                        </svg>
+                                        class="btn btn-primary btn-lg max-sm:text-sm px-6 sm:px-12 gap-2 shadow-lg shadow-primary/20">
+                                        <i data-lucide="zap" class="size-4 sm:size-5"></i>
                                         Generate
                                     </button>
                                 </div>
@@ -162,57 +133,51 @@
                     <!-- Timer Section -->
                     <section id="timerSection" class="hidden animate-in fade-in slide-in-from-top-4 duration-500">
                         <div class="card bg-base-100 shadow-sm border border-base-300">
-                            <div class="card-body p-6">
+                            <div class="card-body p-4 md:p-6">
                                 <div class="flex flex-col lg:flex-row items-center justify-between gap-6">
                                     <!-- Timer Display -->
-                                    <div class="flex flex-col items-center lg:items-start gap-2">
+                                    <div class="flex flex-col items-center lg:items-start max-lg:w-full gap-2">
                                         <div
                                             class="flex items-center gap-2 text-base-content/60 uppercase text-xs font-bold tracking-widest">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
-                                                viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                            </svg>
+                                            <i data-lucide="clock" class="h-4 w-4"></i>
                                             Countdown Timer
                                         </div>
                                         <div class="flex items-center gap-4">
-                                            <div class="grid grid-flow-col gap-4 text-center auto-cols-max">
+                                            <div
+                                                class="grid grid-flow-col rounded-box bg-base-content gap-0 md:px-2 text-center auto-cols-max">
                                                 <div
-                                                    class="flex flex-col px-4 py-2 bg-black text-white font-bold rounded-box shadow-sm border border-black/10 [[data-theme='dark']_&]:bg-white [[data-theme='dark']_&]:text-black">
-                                                    <span class="countdown font-mono text-4xl">
+                                                    class="flex flex-col items-center justify-center px-3 md:px-5 py-1 md:py-2 text-base-100 font-bold">
+                                                    <span class="countdown font-mono text-3xl md:text-4xl">
                                                         <span id="timerMin" style="--value:0;"></span>
                                                     </span>
-                                                    <span class="text-[10px] uppercase opacity-60">min</span>
+                                                    <span
+                                                        class="text-[8px] sm:text-[10px] uppercase opacity-60">min</span>
                                                 </div>
+                                                <div class="w-px h-10 bg-base-100/10 self-center"></div>
                                                 <div
-                                                    class="flex flex-col px-4 py-2 bg-black text-white font-bold rounded-box shadow-sm border border-black/10 [[data-theme='dark']_&]:bg-white [[data-theme='dark']_&]:text-black">
-                                                    <span class="countdown font-mono text-4xl">
+                                                    class="flex flex-col items-center justify-center px-3 md:px-5 py-1 md:py-2 text-base-100 font-bold">
+                                                    <span class="countdown font-mono text-3xl md:text-4xl">
                                                         <span id="timerSec" style="--value:0;"></span>
                                                     </span>
-                                                    <span class="text-[10px] uppercase opacity-60">sec</span>
+                                                    <span
+                                                        class="text-[8px] sm:text-[10px] uppercase opacity-60">sec</span>
                                                 </div>
                                             </div>
 
-                                            <div class="flex max-md:flex-col gap-1">
+                                            <div class="flex gap-1 items-center">
                                                 <button id="startTimerBtn" onclick="toggleTimer()"
-                                                    class="btn btn-primary btn-md shadow-md">
-                                                    <svg id="playIcon" xmlns="http://www.w3.org/2000/svg"
-                                                        class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                                        <path fill-rule="evenodd"
-                                                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-                                                            clip-rule="evenodd" />
-                                                    </svg>
-                                                    <svg id="pauseIcon" xmlns="http://www.w3.org/2000/svg"
-                                                        class="h-5 w-5 hidden" viewBox="0 0 20 20" fill="currentColor">
-                                                        <path fill-rule="evenodd"
-                                                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z"
-                                                            clip-rule="evenodd" />
-                                                    </svg>
-                                                    <span id="timerBtnText">Bắt đầu</span>
+                                                    class="btn btn-md sm:shadow-md max-sm:btn-ghost max-sm:text-primary">
+                                                    <i id="playIcon" data-lucide="play"
+                                                        class="max-sm:fill-primary max-sm:size-6 size-5"></i>
+                                                    <i id="pauseIcon" data-lucide="pause"
+                                                        class="max-sm:fill-primary max-sm:size-6 size-5 hidden"></i>
+                                                    <span id="timerBtnText" class="max-sm:hidden">Bắt đầu</span>
                                                 </button>
                                                 <button onclick="resetTimer()"
-                                                    class="btn btn-ghost btn-md border-primary text-primary opacity-70">Đặt
-                                                    lại</button>
+                                                    class="btn btn-md btn-ghost text-primary max-sm:px-2 gap-2">
+                                                    <i data-lucide="refresh-cw" class="max-sm:size-6 size-5"></i>
+                                                    <span class="max-sm:hidden font-bold">Đặt lại</span>
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -243,6 +208,8 @@
                                             <div
                                                 class="text-[10px] items-center opacity-40 uppercase font-bold tracking-tighter w-full text-center lg:text-right mb-[-5px]">
                                                 Quick Presets</div>
+                                            <button onclick="setTimer(10)"
+                                                class="btn btn-xs btn-outline btn-primary rounded-full px-3">10p</button>
                                             <button onclick="setTimer(15)"
                                                 class="btn btn-xs btn-outline btn-primary rounded-full px-3">15p</button>
                                             <button onclick="setTimer(30)"
@@ -251,8 +218,6 @@
                                                 class="btn btn-xs btn-outline btn-primary rounded-full px-3">45p</button>
                                             <button onclick="setTimer(60)"
                                                 class="btn btn-xs btn-outline btn-primary rounded-full px-3">60p</button>
-                                            <button onclick="setTimer(90)"
-                                                class="btn btn-xs btn-outline btn-primary rounded-full px-3">90p</button>
                                         </div>
                                     </div>
                                 </div>
@@ -261,53 +226,38 @@
                     </section>
 
                     <!-- Exercise Container -->
-                    <section id="exerciseContainer" class="grid grid-cols-1 gap-6">
+                    <section id="exerciseContainer" class="grid grid-cols-1 gap-4 md:gap-6">
                         <!-- Questions injected here -->
                     </section>
                 </div>
             </main>
 
             <!-- Bottom Navigation: MOBILE ONLY (Material Design Style) -->
-            <div class="btm-nav lg:hidden flex items-center justify-around bg-white border-t border-base-300 h-14 z-50">
+            <div id="appBottomNav"
+                class="fixed bottom-0 left-0 right-0 flex lg:hidden items-center justify-around bg-base-200 border-t border-base-300 h-12 z-50 transition-transform duration-300">
                 <button id="submitBottomBtn" disabled onclick="submitAnswers()"
-                    class="group flex-1 h-14 flex justify-center">
+                    class="group flex-1 h-12 flex justify-center">
                     <div class="flex items-center justify-center text-primary">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="size-8 group-disabled:text-base-content/20"
-                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
+                        <i data-lucide="check-circle" class="size-7 group-disabled:text-base-content/20"></i>
                     </div>
                 </button>
-                <button id="nextWrongBottomBtn" class="hidden group flex-1 h-14 flex justify-center bg-error/10"
+                <button id="nextWrongBottomBtn" class="hidden group flex-1 h-12 flex justify-center bg-error/10"
                     onclick="window.nextWrongQuestion()">
                     <div class="flex items-center justify-center text-error">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="size-8" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                d="M13 5l7 7-7 7M5 5l7 7-7 7" />
-                        </svg>
+                        <i data-lucide="chevrons-right" class="size-7"></i>
                     </div>
                 </button>
                 <button id="resetBottomBtn" disabled onclick="resetExercise()"
-                    class="group flex-1 h-14 flex justify-center">
+                    class="group flex-1 h-12 flex justify-center">
                     <div class="rounded-full flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg"
-                            class="size-8 text-yellow-500 group-disabled:text-base-content/20" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                        </svg>
+                        <i data-lucide="rotate-ccw"
+                            class="size-7 text-yellow-500 group-disabled:text-base-content/20"></i>
                     </div>
                 </button>
                 <button onclick="document.getElementById('mainContent').scrollTo({top:0,behavior:'smooth'})"
-                    class="group h-14 flex-1 flex justify-center">
+                    class="group h-12 flex-1 flex justify-center">
                     <div class="rounded-full flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="size-7 text-black" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                d="M5 10l7-7m0 0l7 7m-7-7v18" />
-                        </svg>
+                        <i data-lucide="arrow-up-to-line" class="size-7 text-base-content/80"></i>
                     </div>
                 </button>
             </div>
@@ -317,43 +267,27 @@
                 <button id="nextWrongDesktopBtn"
                     class="hidden btn btn-error btn-circle size-14 hover:scale-110 active:scale-95 transition-all shadow-lg"
                     onclick="window.nextWrongQuestion()" title="Câu sai tiếp theo">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="size-8" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                            d="M13 5l7 7-7 7M5 5l7 7-7 7" />
-                    </svg>
+                    <i data-lucide="chevrons-right" class="size-8"></i>
                 </button>
                 <button id="desktopResetBtn" disabled onclick="resetExercise()"
                     class="btn btn-warning btn-circle size-14 hover:scale-110 active:scale-95 transition-all">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="size-8" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                    </svg>
+                    <i data-lucide="rotate-ccw" class="size-8"></i>
                 </button>
                 <button id="desktopSubmitBtn" disabled onclick="submitAnswers()"
                     class="btn btn-primary btn-circle size-14 hover:scale-110 active:scale-95 transition-all">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="size-8" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
+                    <i data-lucide="check-circle" class="size-8"></i>
                 </button>
                 <button onclick="document.getElementById('mainContent').scrollTo({top:0,behavior:'smooth'})"
                     class="btn btn-circle btn-neutral size-10 hover:scale-110 active:scale-95 transition-all">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="size-6" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M5 10l7-7m0 0l7 7m-7-7v18" />
-                    </svg>
+                    <i data-lucide="chevron-up" class="size-6"></i>
                 </button>
             </div>
 
             <!-- Float Timer Display (Only visible when scrolling) -->
-            <div id="floatTimer" class="fixed top-17 left-4 lg:top-18 lg:left-6 z-[60] hidden slide-in-from-top-4">
+            <div id="floatTimer" class="fixed top-17 left-2 lg:top-18 lg:left-6 z-[60] hidden slide-in-from-top-4">
                 <div
-                    class="bg-black text-white px-4 py-2 rounded-full shadow-2xl border border-black/10 flex items-center gap-3 ring-4 ring-primary/20 [[data-theme='dark']_&]:bg-white [[data-theme='dark']_&]:text-black">
-                    <span class="font-mono font-black text-2xl tracking-tighter min-w-[80px] text-center">
+                    class="bg-base-content/85 text-base-100 px-2 md:px-4 py-1 md:py-2 rounded-full shadow-2xl border border-black/10 flex items-center gap-3 ring-4 ring-primary/20">
+                    <span class="font-mono font-black text-xl md:text-2xl tracking-tighter min-w-[80px] text-center">
                         <span id="floatMin">00</span>:<span id="floatSec">00</span>
                     </span>
                 </div>
@@ -363,13 +297,34 @@
         <aside class="drawer-side z-[60] border-r border-base-300">
             <label for="my-drawer" class="drawer-overlay"></label>
             <div class="flex flex-col max-w-[85%] w-90 lg:w-118 h-screen bg-base-100 text-base-content">
-                <div class="p-6 border-b border-base-200 flex justify-between items-center">
-                    <h3 class="text-sm font-black uppercase tracking-widest text-base-content/50">Activity History</h3>
-                    <button onclick="clearHistory()"
-                        class="btn btn-error btn-xs bg-error/10 border-none text-error hover:bg-error hover:text-white transition-all px-4 font-bold">Clear</button>
+                <div class="p-4 sm:p-6 border-b border-base-300 flex flex-col gap-3">
+                    <div class="flex justify-end sm:justify-between items-center w-full">
+                        <h3 class="hidden sm:block text-sm font-black uppercase tracking-widest text-base-content/50">Activity History
+                        </h3>
+                        <div class="flex gap-2">
+                            <button id="historySelectBtn" onclick="toggleHistorySelectionMode()"
+                                class="btn btn-ghost btn-xs bg-base-200/50 border-none px-4 font-bold">Chọn</button>
+                            <button id="historyClearBtn" onclick="clearHistory()"
+                                class="btn btn-error btn-xs bg-error/10 border-none text-error hover:bg-error hover:text-white transition-all px-4 font-bold">Clear</button>
+                        </div>
+                    </div>
+                    <!-- Bulk actions bar for history -->
+                    <div id="historyBulkActions"
+                        class="hidden flex items-center justify-between bg-error/10 p-2 px-3 rounded-lg border border-error/20 animate-in slide-in-from-top-2 duration-200">
+                        <span class="text-[10px] font-black uppercase text-error" id="historySelectedCount">0
+                            selected</span>
+                        <div class="flex gap-1">
+                            <button onclick="deselectAllHistory()"
+                                class="btn btn-ghost btn-xs text-[10px] font-bold">Bỏ chọn</button>
+                            <button onclick="selectAllHistory()"
+                                class="btn btn-ghost btn-xs text-[10px] font-bold">Tất cả</button>
+                            <button id="historyDeleteSelectedBtn" disabled onclick="deleteSelectedHistory()"
+                                class="btn btn-error btn-xs font-bold">Xóa</button>
+                        </div>
+                    </div>
                 </div>
                 <!-- Search/Filter could go here -->
-                <nav id="historyContainer" class="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar">
+                <nav id="historyContainer" class="flex-1 overflow-y-auto p-4 space-y-2 sm:space-y-3 custom-scrollbar">
                     <!-- Items -->
                 </nav>
                 <div class="p-4 bg-base-200/50 border-t border-base-200">
@@ -421,10 +376,7 @@
     <div id="selectionPopup" class="fixed hidden z-[100] animate-in fade-in zoom-in duration-200">
         <button onclick="window.openAddToAlbumModal()"
             class="btn btn-sm btn-primary shadow-2xl gap-2 rounded-full px-4 border-2 border-white/20">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
-            </svg>
+            <i data-lucide="plus" class="h-4 w-4"></i>
             <span class="font-bold">Thêm vào Album</span>
         </button>
     </div>
@@ -434,11 +386,7 @@
         <div class="modal-box bg-base-100/95 backdrop-blur-md border border-base-300">
             <div class="flex items-center gap-3 mb-6">
                 <div class="p-2 bg-primary/10 rounded-lg text-primary">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                    </svg>
+                    <i data-lucide="book" class="h-6 w-6"></i>
                 </div>
                 <h3 class="font-black text-xl">Lưu từ vựng mới</h3>
             </div>
@@ -505,11 +453,7 @@
         <div class="modal-box bg-base-100/95 backdrop-blur-md border border-base-300">
             <div class="flex items-center gap-3 mb-6">
                 <div class="p-2 bg-secondary/10 rounded-lg text-secondary">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                    </svg>
+                    <i data-lucide="edit" class="h-6 w-6"></i>
                 </div>
                 <h3 class="font-black text-xl">Sửa từ vựng</h3>
             </div>
@@ -561,11 +505,7 @@
     <dialog id="confirmDuplicateModal" class="modal modal-bottom sm:modal-middle">
         <div class="modal-box">
             <h3 class="font-bold text-lg text-warning flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                </svg>
+                <i data-lucide="alert-triangle" class="h-6 w-6"></i>
                 Từ vựng đã tồn tại
             </h3>
             <p class="py-4" id="duplicateModalMessage"></p>
@@ -584,11 +524,7 @@
     <dialog id="moveWordsModal" class="modal modal-bottom sm:modal-middle">
         <div class="modal-box">
             <h3 class="font-bold text-lg flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-                </svg>
+                <i data-lucide="move" class="h-6 w-6 text-primary"></i>
                 Di chuyển từ vựng
             </h3>
             <p class="py-4 opacity-70">Chọn album đích cho các từ đã chọn:</p>
@@ -629,18 +565,10 @@
                 <div class="flex items-center gap-3">
                     <button onclick="window.toggleWordListSidebar()" class="btn btn-sm btn-circle btn-ghost"
                         title="Ẩn/Hiện danh sách Album">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4 6h16M4 12h16M4 18h7" />
-                        </svg>
+                        <i data-lucide="menu" class="h-6 w-6"></i>
                     </button>
                     <div class="flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 hidden sm:block" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                        </svg>
+                        <i data-lucide="book" class="h-8 w-8 hidden sm:block"></i>
                         <h2 class="text-xl lg:text-2xl font-black uppercase tracking-tight">My Word Albums</h2>
                     </div>
                 </div>
@@ -662,11 +590,7 @@
                                 Collections</span>
                             <button onclick="window.showCreateAlbumInput()" class="btn btn-xs btn-circle btn-primary"
                                 title="Tạo Album mới">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
-                                        d="M12 4v16m8-8H4" />
-                                </svg>
+                                <i data-lucide="plus" class="h-3 w-3"></i>
                             </button>
                         </div>
                         <div id="newAlbumQuickInput" class="hidden animate-in slide-in-from-top-2 duration-200">
@@ -702,11 +626,7 @@
                                 <div id="studyModeControl" class="flex items-center max-md:justify-between gap-3 mt-2">
                                     <button onclick="window.openAddWordDirectly()"
                                         class="btn btn-primary btn-xs rounded-full gap-1 border-none shadow-sm shadow-primary/20 max-md:order-2">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                                d="M12 4v16m8-8H4" />
-                                        </svg>
+                                        <i data-lucide="plus" class="h-3.5 w-3.5"></i>
                                         Thêm từ
                                     </button>
                                     <label id="hideMeaningLabel" class="label cursor-pointer gap-2 p-0 hidden">
@@ -722,11 +642,7 @@
                                 <button id="clearAllWordsBtn" onclick="window.confirmClearAllWords()"
                                     class="btn bg-red-500 btn-xs text-white rounded-full gap-1 border-error/20 hidden"
                                     title="Xóa toàn bộ từ vựng">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                    </svg>
+                                    <i data-lucide="trash-2" class="h-3.5 w-3.5"></i>
                                     Xóa hết
                                 </button>
 
@@ -734,11 +650,7 @@
                                     <button onclick="window.toggleSelectionMode()"
                                         class="btn btn-ghost btn-xs rounded-full gap-1 border-base-300"
                                         id="toggleSelectionBtn">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                                        </svg>
+                                        <i data-lucide="book-open" class="h-3.5 w-3.5"></i>
                                         Chọn
                                     </button>
 
@@ -762,20 +674,12 @@
                             <div class="flex items-center gap-2">
                                 <button id="bulkMoveBtn" disabled onclick="window.openMoveWordsModal()"
                                     class="btn btn-primary btn-xs rounded-lg gap-1">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-                                    </svg>
+                                    <i data-lucide="move" class="h-3.5 w-3.5"></i>
                                     Di chuyển
                                 </button>
                                 <button id="bulkDeleteBtn" disabled onclick="window.confirmDeleteSelected()"
                                     class="btn btn-error btn-xs rounded-lg gap-1">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                    </svg>
+                                    <i data-lucide="trash-2" class="h-3.5 w-3.5"></i>
                                     Xóa bỏ
                                 </button>
                             </div>
@@ -794,43 +698,39 @@
 
     <!-- Prompt Model Modal -->
     <dialog id="promptModal" class="modal modal-bottom sm:modal-middle">
-        <div class="modal-box max-w-2xl bg-base-100 p-0 overflow-hidden border border-base-300 shadow-2xl">
-            <div class="p-6 bg-primary text-primary-content flex justify-between items-center">
+        <div
+            class="modal-box max-w-3xl h-[90dvh] md:h-[80vh] bg-base-100 p-0 overflow-hidden border border-base-300 shadow-2xl">
+            <div class="p-4 md:p-6 bg-primary text-primary-content flex justify-between items-center">
                 <div class="flex items-center gap-3">
                     <div class="p-2 bg-white/20 rounded-lg">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2-2h-5l-5 5v-5z" />
-                        </svg>
+                        <i data-lucide="message-square" class="size-5 sm:size-6"></i>
                     </div>
                     <div>
-                        <h3 class="font-black text-xl uppercase tracking-tight leading-none" id="promptModalTitle">TOEIC
+                        <h3 class="font-black text-lg md:text-xl uppercase tracking-tight leading-none"
+                            id="promptModalTitle">TOEIC
                             Generator</h3>
-                        <span class="text-[10px] opacity-60 font-bold uppercase tracking-widest">Active AI Prompt</span>
+                        <span class="hidden sm:block text-[10px] opacity-60 font-bold uppercase tracking-widest">Active
+                            AI Prompt</span>
                     </div>
                 </div>
                 <div class="flex gap-2">
                     <button onclick="promptModal.close(); managePromptsModal.showModal()"
                         class="btn btn-sm btn-circle btn-ghost" title="Quản lý thư viện">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                        </svg>
+                        <i data-lucide="library" class="h-5 w-5"></i>
                     </button>
                     <form method="dialog"><button class="btn btn-sm btn-circle btn-ghost">✕</button></form>
                 </div>
             </div>
 
-            <div class="p-6 space-y-4 bg-base-100 italic">
-                <p class="text-sm opacity-70">Sử dụng prompt dưới đây với ChatGPT/Claude để tạo nội dung bài tập chuẩn
+            <div class="p-4 md:p-6 space-y-2 md:space-y-4 bg-base-100 italic">
+                <p class="text-xs sm:text-sm opacity-70">Sử dụng prompt dưới đây với ChatGPT/Claude để tạo nội dung bài
+                    tập chuẩn
                     định dạng cho ứng dụng:</p>
                 <div class="relative group">
                     <div id="promptText"
-                        class="bg-base-200 p-4 rounded-xl text-sm leading-relaxed whitespace-pre-line font-medium border border-base-300 max-h-96 overflow-y-auto custom-scrollbar not-italic">
-                        2 Exercise mỗi bài 10 câu dạng thường gặp trong các đề thi TOEIC, mức độ khó giống TOEIC thật,
-                        cung cấp đáp án + giải thích chi tiết từng câu để tự chấm.
+                        class="bg-base-200 p-2 sm:p-4 rounded-xl text-sm leading-relaxed whitespace-pre-line md:font-medium border border-base-300 max-h-104 overflow-y-auto custom-scrollbar not-italic">
+                        2 Exercise mỗi bài 10 câu dạng thường gặp trong các đề thi TOEIC, mức độ khó giống TOEIC
+                        thật, cung cấp đáp án + giải thích chi tiết từng câu để tự chấm.
 
                         Yêu cầu bắt buộc:
 
@@ -877,30 +777,27 @@
 
                         ...
 
-                        Exercise 2 – Complete the sentences with the correct word.
-                        1. ....
+                        Exercise 2 – Complete the sentences with the correct form of the word in parentheses.
+
+                        (Yêu cầu: mỗi câu phải có một từ gợi ý đặt trong dấu ngoặc () ở cuối câu. Người làm bài phải
+                        chia từ đó đúng dạng ngữ pháp.)
+
+                        1. ........ (finish)
+                        2. ........ (deliver)
                         ...
 
                         Answer Key & Detailed Explanations – Exercise 2
 
+                        1. had finished – explanation
+                        2. had delivered – explanation
                         ...
                         Độ khó: TOEIC 600–850.</div>
                     <button id="copyPromptBtn" onclick="copyPrompt()"
-                        class="btn btn-primary btn-sm absolute top-4 right-4 shadow-lg gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m-7 4h7" />
-                        </svg>
-                        Copy Prompt
+                        class="btn btn-sm btn-primary absolute top-4 right-4 shadow-lg gap-2 max-sm:p-0 max-sm:bg-transparent max-sm:border-none max-sm:text-primary max-sm:shadow-none hover:max-sm:bg-primary/10 transition-all">
+                        <i data-lucide="copy" class="size-5 sm:size-4"></i>
+                        <span class="hidden sm:block">Copy Prompt</span>
                     </button>
                 </div>
-            </div>
-
-            <div class="p-4 bg-base-200/50 border-t border-base-200 flex justify-end">
-                <form method="dialog">
-                    <button class="btn btn-ghost btn-sm">Đóng</button>
-                </form>
             </div>
         </div>
         <form method="dialog" class="modal-backdrop"><button>close</button></form>
@@ -909,67 +806,86 @@
     <!-- Manage Prompts Modal -->
     <dialog id="managePromptsModal" class="modal modal-bottom sm:modal-middle">
         <div
-            class="modal-box max-w-3xl bg-base-100 p-0 overflow-hidden border border-base-300 shadow-2xl flex flex-col h-[75vh]">
-            <div class="p-6 bg-secondary text-secondary-content flex justify-between items-center shrink-0">
+            class="modal-box max-w-4xl bg-base-100 p-0 overflow-hidden border border-base-300 shadow-2xl flex flex-col max-sm:h-[95dvh] h-[80vh]">
+            <div class="p-4 md:p-6 bg-secondary text-secondary-content flex justify-between items-center shrink-0">
                 <div class="flex items-center gap-3">
                     <button onclick="managePromptsModal.close(); promptModal.showModal()"
                         class="btn btn-sm btn-circle btn-ghost bg-white/10" title="Quay lại">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                d="M15 19l-7-7 7-7" />
-                        </svg>
+                        <i data-lucide="chevron-left" class="h-5 w-5"></i>
                     </button>
-                    <h3 class="font-black text-xl uppercase tracking-tight">Prompt Library</h3>
+                    <h3 class="font-black text-lg md:text-xl uppercase tracking-tight">Prompt Library</h3>
                 </div>
                 <div class="flex gap-2">
                     <button onclick="window.togglePromptForm()" class="btn btn-sm btn-circle btn-ghost bg-white/10"
                         title="Thêm prompt mới">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                d="M12 4v16m8-8H4" />
-                        </svg>
+                        <i data-lucide="plus" class="h-5 w-5"></i>
                     </button>
                     <form method="dialog"><button class="btn btn-sm btn-circle btn-ghost">✕</button></form>
                 </div>
             </div>
 
-            <div class="flex-1 overflow-y-auto p-6 bg-base-200/30 font-sans">
-                <!-- Add/Edit Form (Hidden by default) -->
+            <div class="flex-1 overflow-y-auto p-6 bg-base-200/30 font-sans relative">
+                <!-- Add/Edit Form Overlay -->
                 <div id="promptManageForm"
-                    class="hidden mb-8 p-6 bg-base-100 rounded-2xl border-2 border-primary/20 shadow-lg animate-in fade-in slide-in-from-top-4 duration-300">
+                    class="hidden absolute inset-0 z-50 p-4 md:p-6 bg-base-100 flex flex-col animate-in fade-in zoom-in-95 duration-200">
+                    <div class="flex justify-between items-center mb-2 md:mb-4 shrink-0">
+                        <h4 class="font-black md:text-lg uppercase text-primary tracking-wider" id="promptFormTitle">Add
+                            New Prompt</h4>
+                        <div class="flex items-center gap-2">
+                            <button id="savePromptBtn" onclick="window.saveNewPrompt()"
+                                class="btn btn-sm btn-circle btn-primary shadow-lg shadow-primary/20 disabled:opacity-50 disabled:grayscale"
+                                title="Lưu thay đổi" disabled>
+                                <i data-lucide="download" class="h-[18px] w-[18px]"></i>
+                            </button>
+                            <button onclick="window.closePromptFormUI()" class="btn btn-sm btn-circle btn-ghost">
+                                <i data-lucide="x" class="h-5 w-5"></i>
+                            </button>
+                        </div>
+                    </div>
+
                     <input type="hidden" id="promptIdInput" />
-                    <div class="space-y-4">
-                        <div class="form-control flex flex-col justify-start items-start gap-2">
-                            <label class="label"><span class="label-text font-bold opacity-60">Tiêu đề
-                                    Prompt</span></label>
+                    <div class="flex-1 flex flex-col gap-2 md:gap-5 overflow-hidden">
+                        <div class="form-control shrink-0">
+                            <label class="label p-0 mb-2"><span class="label-text font-semibold opacity-60 text-sm">Tiêu
+                                    đề Prompt</span></label>
                             <input type="text" id="promptTitleInput" placeholder="Ví dụ: Luyện thi IELTS Reading"
-                                class="input input-bordered focus:input-primary w-full" />
+                                class="input input-bordered flex-1 bg-base-200 p-2 md:p-4 rounded-xl text-sm leading-relaxed whitespace-pre-line outline-none focus:border-primary w-full resize-none" />
                         </div>
-                        <div class="form-control flex flex-col justify-start items-start gap-2">
-                            <label class="label"><span class="label-text font-bold opacity-60">Nội dung
-                                    Prompt</span></label>
+                        <div class="form-control flex-1 flex flex-col min-h-0">
+                            <label class="label p-0 mb-2"><span class="label-text font-semibold opacity-60 text-sm">Nội
+                                    dung Prompt</span></label>
                             <textarea id="promptContentInput"
-                                class="textarea textarea-bordered h-62 focus:textarea-primary leading-relaxed w-full"
+                                class="textarea textarea-bordered flex-1 bg-base-200 p-2 md:p-4 rounded-xl text-sm leading-relaxed whitespace-pre-line outline-none focus:border-primary w-full resize-none"
                                 placeholder="Hãy tạo bài tập..."></textarea>
-                        </div>
-                        <div class="flex justify-end gap-2">
-                            <button onclick="window.togglePromptForm()" class="btn btn-ghost btn-sm">Hủy</button>
-                            <button onclick="window.saveNewPrompt()" class="btn btn-primary btn-sm px-8">Lưu
-                                Prompt</button>
                         </div>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="promptListContainer">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="promptListContainer">
                     <!-- Prompts injected here -->
                 </div>
             </div>
 
-            <div class="p-4 bg-base-100 border-t border-base-200 text-center shrink-0">
-                <p class="text-[10px] opacity-40 uppercase font-black tracking-widest">Manage your personalized AI study
+            <div class="p-2 md:p-4 bg-base-200 border-t border-base-300 text-center shrink-0">
+                <p class="text-[8px] md:text-[12px] opacity-40 uppercase font-black tracking-widest">Manage your
+                    personalized AI study
                     assistants</p>
+            </div>
+        </div>
+        <form method="dialog" class="modal-backdrop"><button>close</button></form>
+    </dialog>
+
+    <!-- Modal xác nhận đóng prompt khi có thay đổi -->
+    <dialog id="confirmClosePromptModal" class="modal modal-bottom sm:modal-middle">
+        <div class="modal-box max-w-sm">
+            <h3 class="font-bold text-lg">Hủy bỏ thay đổi?</h3>
+            <p class="py-4">Bạn vẫn muốn tiếp tục thoát chứ?</p>
+            <div class="modal-action">
+                <form method="dialog">
+                    <button class="btn btn-ghost px-6">Tiếp</button>
+                    <button class="btn btn-error ml-2 px-8 font-bold"
+                        onclick="document.getElementById('promptManageForm').classList.add('hidden')">Thoát</button>
+                </form>
             </div>
         </div>
         <form method="dialog" class="modal-backdrop"><button>close</button></form>

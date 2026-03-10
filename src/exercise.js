@@ -550,10 +550,10 @@ export function renderExercise(savedData = null) {
     questions.forEach((q, idx) => {
         if (q.section !== lastSection && q.section) {
             const sectionHeader = document.createElement("div");
-            sectionHeader.className = "col-span-full mt-6 mb-2";
+            sectionHeader.className = "col-span-full mt-4 md:mt-6 mb-2";
             sectionHeader.innerHTML = `
                 <div class="flex items-center gap-4">
-                    <h2 class="text-2xl font-black text-primary uppercase tracking-wider">${q.section}</h2>
+                    <h2 class="text-lg md:text-2xl font-black text-primary uppercase tracking-wider">${q.section}</h2>
                     <div class="h-px bg-primary/20 flex-1"></div>
                 </div>
             `;
@@ -562,7 +562,7 @@ export function renderExercise(savedData = null) {
         }
 
         const div = document.createElement("div");
-        div.className = "card bg-base-100 shadow-md border border-base-200 overflow-hidden duration-300 transition-all";
+        div.className = "card bg-base-100 border border-base-300 overflow-hidden duration-300 transition-all";
         div.id = "q" + q.id;
 
         let bodyHtml = "";
@@ -574,7 +574,7 @@ export function renderExercise(savedData = null) {
                     name="q${q.id}" autocomplete="off">
             </div>`;
         } else {
-            bodyHtml = `<div class="space-y-2 mt-4">` + q.options.map(opt => {
+            bodyHtml = `<div class="space-y-2 mt-0 md:mt-4">` + q.options.map(opt => {
                 const letter = opt.charAt(0);
                 return `
                 <label class="form-control flex flex-row items-center gap-3 p-3 hover:bg-base-200 cursor-pointer rounded-lg transition-all border border-transparent">
@@ -585,10 +585,10 @@ export function renderExercise(savedData = null) {
         }
 
         div.innerHTML = `
-            <div class="card-body p-5 md:p-6">
+            <div class="card-body p-4 md:p-6">
                 <h3 class="flex items-start gap-2 mb-2">
-                    <span class="badge badge-primary shrink-0 mt-1">${'Q' + q.number}</span>
-                    <span class="font-bold text-lg leading-relaxed text-base-content">${q.text}</span>
+                    <span class="badge text-primary px-0 font-bold text-lg shrink-0 mt-1">${q.number + `.`}</span>
+                    <span class="font-semibold sm:font-bold text-lg leading-relaxed text-base-content">${q.text}</span>
                 </h3>
                 ${bodyHtml}
                 <div id="exp${q.id}" class="mt-6 p-4 rounded-xl hidden border-l-4 text-base-content"></div>
@@ -659,6 +659,7 @@ export function submitAnswers(review = false) {
 }
 
 function processSubmission(review = false) {
+    if (typeof window.pauseTimer === "function") window.pauseTimer();
     let correct = 0;
     if (!review) userAnswers = {};
 
@@ -710,9 +711,7 @@ function processSubmission(review = false) {
                 </div>
                 <div class="divider h-px my-1 opacity-10"></div>
                 <div class="flex items-start gap-2">
-                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mt-0.5 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
+                     <i data-lucide="info" class="h-4 w-4 mt-0.5 opacity-50"></i>
                     <p class="text-sm leading-relaxed text-base-content italic">${q.explanation || "No explanation available."}</p>
                 </div>
             </div>`;
@@ -749,6 +748,7 @@ function processSubmission(review = false) {
         // Show Result Modal
         showResultModal(correct, questions.length, firstWrongId);
     }
+    if (window.lucide) window.lucide.createIcons();
 }
 
 function showResultModal(correct, total, firstWrongId) {
@@ -769,16 +769,14 @@ function showResultModal(correct, total, firstWrongId) {
     if (iconContainer) {
         iconContainer.innerHTML = isSuccess
             ? `<div class="w-20 h-20 bg-success/10 text-success rounded-full flex items-center justify-center mx-auto mb-4 animate-bounce">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
-                </svg>
+                <i data-lucide="check" class="h-12 w-12" style="stroke-width: 3"></i>
                </div>`
             : `<div class="w-20 h-20 bg-warning/10 text-warning rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                </svg>
+                <i data-lucide="alert-triangle" class="h-12 w-12" style="stroke-width: 2"></i>
                </div>`;
     }
+
+    if (window.lucide) window.lucide.createIcons();
 
     // Attach firstWrongId to window for confirmResult
     window.__lastFirstWrongId = firstWrongId;

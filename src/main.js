@@ -3,6 +3,23 @@ import './album.js';
 import './exercise.js';
 import './prompt_manager.js';
 import { renderPromptList } from './prompt_manager.js';
+import { renderSideAlbumList } from './album.js';
+
+document.addEventListener('DOMContentLoaded', () => {
+    if (window.lucide) {
+        window.lucide.createIcons();
+    }
+
+    // Reset selection mode when closing history sidebar
+    document.getElementById("my-drawer")?.addEventListener("change", (e) => {
+        if (!e.target.checked && isHistorySelectionMode) {
+            isHistorySelectionMode = false;
+            selectedHistoryIndices = [];
+            updateHistorySelectionUI();
+            renderHistory();
+        }
+    });
+});
 
 import { getExerciseState, setExerciseState } from './exercise.js';
 
@@ -16,7 +33,16 @@ export function openSidebar() {
 
 export function closeSidebar() {
     const drawerToggle = document.getElementById("my-drawer");
-    if (drawerToggle) drawerToggle.checked = false;
+    if (drawerToggle) {
+        drawerToggle.checked = false;
+        // Also fire change event to trigger the reset listener or reset directly
+        if (isHistorySelectionMode) {
+            isHistorySelectionMode = false;
+            selectedHistoryIndices = [];
+            updateHistorySelectionUI();
+            renderHistory();
+        }
+    }
 }
 
 window.openSidebar = openSidebar;
@@ -25,7 +51,11 @@ window.closeSidebar = closeSidebar;
 
 /* =========================
    HISTORY
+Index for selection mode
 ========================= */
+let isHistorySelectionMode = false;
+let selectedHistoryIndices = [];
+
 export function saveHistory(correct, total, answers, title) {
     const { questions } = getExerciseState();
     const percent = Math.round((correct / total) * 100);
@@ -41,7 +71,7 @@ export function saveHistory(correct, total, answers, title) {
 
     let history = JSON.parse(localStorage.getItem("practiceHistory") || "[]");
     history.unshift(record);
-    if (history.length > 10) history.pop();
+    if (history.length > 20) history.pop();
 
     localStorage.setItem("practiceHistory", JSON.stringify(history));
     renderHistory();
@@ -50,13 +80,96 @@ export function saveHistory(correct, total, answers, title) {
 export function clearHistory() {
     if (confirm("Are you sure you want to clear all history?")) {
         localStorage.removeItem("practiceHistory");
+        isHistorySelectionMode = false;
+        selectedHistoryIndices = [];
+        updateHistorySelectionUI();
         renderHistory();
     }
 }
 window.clearHistory = clearHistory;
 
-export function renderHistory() {
+export function toggleHistorySelectionMode() {
+    isHistorySelectionMode = !isHistorySelectionMode;
+    selectedHistoryIndices = [];
+    updateHistorySelectionUI();
+    renderHistory();
+}
+window.toggleHistorySelectionMode = toggleHistorySelectionMode;
 
+export function toggleHistoryRecordSelection(index) {
+    const idx = selectedHistoryIndices.indexOf(index);
+    if (idx > -1) {
+        selectedHistoryIndices.splice(idx, 1);
+    } else {
+        selectedHistoryIndices.push(index);
+    }
+    updateHistorySelectionUI();
+    renderHistory();
+}
+window.toggleHistoryRecordSelection = toggleHistoryRecordSelection;
+
+export function selectAllHistory() {
+    const history = JSON.parse(localStorage.getItem("practiceHistory") || "[]");
+    selectedHistoryIndices = history.map((_, i) => i);
+    updateHistorySelectionUI();
+    renderHistory();
+}
+window.selectAllHistory = selectAllHistory;
+
+export function deselectAllHistory() {
+    selectedHistoryIndices = [];
+    updateHistorySelectionUI();
+    renderHistory();
+}
+window.deselectAllHistory = deselectAllHistory;
+
+function updateHistorySelectionUI() {
+    const selectBtn = document.getElementById("historySelectBtn");
+    const bulkBar = document.getElementById("historyBulkActions");
+    const countText = document.getElementById("historySelectedCount");
+    const deleteBtn = document.getElementById("historyDeleteSelectedBtn");
+    const clearBtn = document.getElementById("historyClearBtn");
+
+    if (selectBtn) {
+        selectBtn.innerText = isHistorySelectionMode ? "Hủy" : "Chọn";
+        selectBtn.classList.toggle("btn-primary", isHistorySelectionMode);
+        selectBtn.classList.toggle("bg-base-200/50", !isHistorySelectionMode);
+    }
+
+    if (bulkBar) {
+        bulkBar.classList.toggle("hidden", !isHistorySelectionMode);
+    }
+
+    if (clearBtn) {
+        clearBtn.classList.toggle("hidden", isHistorySelectionMode);
+    }
+
+    if (countText) {
+        countText.innerText = `${selectedHistoryIndices.length} selected`;
+    }
+
+    if (deleteBtn) {
+        deleteBtn.disabled = selectedHistoryIndices.length === 0;
+    }
+}
+
+export function deleteSelectedHistory() {
+    if (selectedHistoryIndices.length === 0) return;
+
+    if (confirm(`Xóa ${selectedHistoryIndices.length} mục đã chọn?`)) {
+        let history = JSON.parse(localStorage.getItem("practiceHistory") || "[]");
+        history = history.filter((_, i) => !selectedHistoryIndices.includes(i));
+        localStorage.setItem("practiceHistory", JSON.stringify(history));
+
+        selectedHistoryIndices = [];
+        isHistorySelectionMode = false; // Turn off selection mode after delete
+        updateHistorySelectionUI();
+        renderHistory();
+    }
+}
+window.deleteSelectedHistory = deleteSelectedHistory;
+
+export function renderHistory() {
     const container = document.getElementById("historyContainer");
     if (!container) return;
     container.innerHTML = "";
@@ -69,33 +182,42 @@ export function renderHistory() {
     }
 
     history.forEach((item, index) => {
+        const isSelected = selectedHistoryIndices.includes(index);
         const div = document.createElement("div");
-        div.className = "card bg-base-200 hover:bg-base-300 cursor-pointer transition-colors p-4 group";
+        div.className = "card bg-base-200 hover:bg-base-300 cursor-pointer transition-colors p-2 sm:p-4 group";
 
-        // Màu sắc dựa trên điểm số: 
-        // 100% màu xanh (success)
-        // >= 80% màu vàng (warning)
-        // >= 50% màu tím (secondary)
-        // < 50% màu đỏ (error)
         const percentNum = parseInt(item.percent);
         const scoreColor = percentNum === 100 ? 'text-success' :
             percentNum >= 80 ? 'text-warning' :
                 percentNum >= 50 ? 'text-secondary font-bold' : 'text-error';
 
         div.innerHTML = `
-            <div class="flex flex-col gap-1" onclick="loadHistory(${index})">
-                <div class="flex justify-between items-start gap-2">
-                    <span class="font-bold text-primary truncate flex-1 opacity-90">${item.title || "No Title"}</span>
-                    <span class="font-bold text-lg lg:text-xl ${scoreColor} shrink-0">${item.score}</span>
+            <div class="flex items-center gap-3">
+                <div class="flex-1 flex flex-col gap-1 min-w-0" onclick="${isHistorySelectionMode ? `toggleHistoryRecordSelection(${index})` : `loadHistory(${index})`}">
+                    <div class="flex justify-between items-start gap-2">
+                        <span class="font-bold max-sm:text-sm text-primary truncate flex-1 opacity-90">${item.title || "No Title"}</span>
+                        <span class="font-bold sm:text-lg lg:text-xl ${scoreColor} shrink-0">${item.score}</span>
+                    </div>
+                    <div class="flex justify-between items-center mt-1">
+                        <div class="text-xs opacity-50 uppercase font-bold">${item.date}</div>
+                        <div class="badge badge-ghost badge-sm opacity-50">${item.percent}</div>
+                    </div>
                 </div>
-                <div class="flex justify-between items-center mt-1">
-                    <div class="text-xs opacity-50 uppercase font-bold">${item.date}</div>
-                    <div class="badge badge-ghost badge-sm opacity-50">${item.percent}</div>
+                ${isHistorySelectionMode ? `
+                <div class="shrink-0 flex items-center justify-center" onclick="toggleHistoryRecordSelection(${index})">
+                    <div class="size-6 rounded-full border-2 ${isSelected ? 'bg-primary border-primary flex items-center justify-center' : 'border-base-content/20'} transition-all">
+                        ${isSelected ? '<i data-lucide="check" class="size-4 text-primary-content"></i>' : ''}
+                    </div>
                 </div>
+                ` : ''}
             </div>`;
 
         container.appendChild(div);
     });
+
+    if (window.lucide) {
+        window.lucide.createIcons();
+    }
 }
 window.renderHistory = renderHistory;
 
@@ -170,6 +292,7 @@ document.getElementById("timerToggle")?.addEventListener("change", (e) => {
 ========================= */
 let timerInterval = null;
 let remainingSeconds = 0;
+let initialSeconds = 0;
 let timerRunning = false;
 let timerStep = 5; // minutes
 
@@ -201,6 +324,7 @@ export function setTimer(minutes) {
         updateTimerUI(false);
     }
     remainingSeconds = minutes * 60;
+    initialSeconds = remainingSeconds;
     updateTimerDisplay();
 }
 window.setTimer = setTimer;
@@ -208,6 +332,7 @@ window.setTimer = setTimer;
 export function adjustTimer(direction) {
     const delta = direction * timerStep * 60;
     remainingSeconds = Math.max(0, remainingSeconds + delta);
+    initialSeconds = remainingSeconds;
     updateTimerDisplay();
 }
 window.adjustTimer = adjustTimer;
@@ -232,14 +357,16 @@ function updateTimerUI(isRunning) {
         playIcon?.classList.add("hidden");
         pauseIcon?.classList.remove("hidden");
         if (btnText) btnText.innerText = "Tạm dừng";
-        btn?.classList.replace("btn-primary", "btn-neutral");
+        btn?.classList.remove("sm:btn-primary", "btn-primary");
+        btn?.classList.add("sm:btn-neutral", "btn-neutral");
     } else {
         playIcon?.classList.remove("hidden");
         pauseIcon?.classList.add("hidden");
         if (btnText) {
             btnText.innerText = remainingSeconds > 0 ? "Tiếp tục" : "Bắt đầu";
         }
-        btn?.classList.replace("btn-neutral", "btn-primary");
+        btn?.classList.remove("sm:btn-neutral", "btn-neutral");
+        btn?.classList.add("sm:btn-primary", "btn-primary");
     }
 }
 
@@ -276,10 +403,19 @@ export function toggleTimer() {
 }
 window.toggleTimer = toggleTimer;
 
+export function pauseTimer() {
+    if (timerRunning) {
+        clearInterval(timerInterval);
+        timerRunning = false;
+        updateTimerUI(false);
+    }
+}
+window.pauseTimer = pauseTimer;
+
 export function resetTimer() {
     clearInterval(timerInterval);
     timerRunning = false;
-    remainingSeconds = 0;
+    remainingSeconds = initialSeconds;
     updateTimerDisplay();
     updateTimerUI(false);
 
@@ -300,20 +436,44 @@ function handleScroll() {
     const floatTimer = document.getElementById("floatTimer");
     const timerSection = document.getElementById("timerSection");
     const timerToggle = document.getElementById("timerToggle");
+    const header = document.getElementById("appHeader");
+    const btmNav = document.getElementById("appBottomNav");
 
     if (!mainContent || !floatTimer || !timerSection || !timerToggle) return;
 
+    // Add transition once if not present
+    if (floatTimer && !floatTimer.style.transition) {
+        floatTimer.style.transition = "all 0.3s ease";
+    }
+
+    const scrollTop = mainContent.scrollTop;
     const isTimerActive = timerToggle.checked && remainingSeconds > 0;
     const timerRect = timerSection.getBoundingClientRect();
+    const headerHeight = header ? header.offsetHeight : 64;
 
-    // Show float timer if main timer is out of view (scrolled past)
+    // 1. Float Timer Logic (Visibility)
     if (isTimerActive && timerRect.bottom < 0) {
         floatTimer.classList.remove("hidden");
     } else {
         floatTimer.classList.add("hidden");
     }
+
+    // 2. Hide Header/BottomNav and Sync Float Timer position
+    if (scrollTop > lastScrollTop && scrollTop > 50) {
+        // Scroll Down
+        if (header) header.style.transform = "translateY(-100%)";
+        if (btmNav) btmNav.style.transform = "translateY(100%)";
+        if (floatTimer) floatTimer.style.top = "8px"; // top-2 (approx 0.5rem)
+    } else {
+        // Scroll Up
+        if (header) header.style.transform = "translateY(0)";
+        if (btmNav) btmNav.style.transform = "translateY(0)";
+        if (floatTimer) floatTimer.style.top = (headerHeight + 8) + "px"; // just below navbar
+    }
+    lastScrollTop = scrollTop;
 }
 
+let lastScrollTop = 0;
 document.getElementById("mainContent")?.addEventListener("scroll", handleScroll);
 
 
@@ -330,15 +490,20 @@ export function copyPrompt() {
         const btn = document.getElementById("copyPromptBtn");
         const originalText = btn.innerHTML;
         btn.innerHTML = `
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-            </svg>
+            <i data-lucide="check" class="h-4 w-4"></i>
             <span>Copied!</span>
         `;
+        if (window.lucide) window.lucide.createIcons();
         btn.classList.replace("btn-primary", "btn-success");
+        btn.classList.replace("max-sm:text-primary", "max-sm:text-success");
+        btn.classList.replace("hover:max-sm:bg-primary/10", "hover:max-sm:bg-success/10");
+
         setTimeout(() => {
             btn.innerHTML = originalText;
+            if (window.lucide) window.lucide.createIcons();
             btn.classList.replace("btn-success", "btn-primary");
+            btn.classList.replace("max-sm:text-success", "max-sm:text-primary");
+            btn.classList.replace("hover:max-sm:bg-success/10", "hover:max-sm:bg-primary/10");
         }, 2000);
     });
 }
