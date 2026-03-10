@@ -32,15 +32,21 @@ export function handleTextSelection() {
     const text = selection.toString().trim();
     const popup = document.getElementById("selectionPopup");
 
-    if (text && text.length > 0 && text.length < 100) {
+    if (text && text.length > 0 && text.length < 100 && selection.rangeCount > 0) {
         selectedTextToSave = text;
         const range = selection.getRangeAt(0);
-        const rect = range.getBoundingClientRect();
+        const rects = range.getClientRects();
+        if (rects.length === 0) return;
 
-        popup.style.left = `${rect.left + (rect.width / 2)}px`;
-        popup.style.top = `${rect.top + window.scrollY - 12}px`;
-        popup.style.transform = "translateX(-50%) translateY(-100%)";
-        popup.classList.remove("hidden");
+        // Lấy rect đầu tiên hoặc rect bao quanh
+        const rect = rects[0];
+
+        if (popup) {
+            popup.style.left = `${rect.left + (rect.width / 2) + window.scrollX}px`;
+            popup.style.top = `${rect.top + window.scrollY - 15}px`;
+            popup.style.transform = "translateX(-50%) translateY(-100%)";
+            popup.classList.remove("hidden");
+        }
     } else {
         if (popup) popup.classList.add("hidden");
     }
@@ -744,16 +750,17 @@ document.addEventListener("mousedown", (e) => {
     }
 });
 
-// Chạm ra ngoài để ẩn trên mobile
+// Chạm ra ngoài để ẩn trên mobile (Cải tiến)
 document.addEventListener("touchstart", (e) => {
     const popup = document.getElementById("selectionPopup");
     if (popup && !popup.contains(e.target)) {
-        // Chỉ ẩn nếu không phải đang chọn văn bản mới
+        // Debounce ẩn để không xung đột với selectionchange
         setTimeout(() => {
-            if (!window.getSelection().toString().trim()) {
+            const sel = window.getSelection();
+            if (sel && sel.isCollapsed) {
                 popup.classList.add("hidden");
             }
-        }, 50);
+        }, 150);
     }
 }, { passive: true });
 
