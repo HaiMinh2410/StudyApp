@@ -4,6 +4,20 @@
     themes: light --default, dark --prefersdark;
 }
 
+html,
+body {
+    height: auto;
+    min-height: 100dvh;
+    @apply scroll-smooth;
+}
+
+/* Optimize bar transitions */
+#appHeader,
+#appBottomNav {
+    will-change: transform;
+    @apply transition-transform duration-300 ease-in-out;
+}
+
 /* Hide Scrollbar Global */
 *::-webkit-scrollbar {
     display: none;
@@ -12,6 +26,7 @@
 * {
     -ms-overflow-style: none;
     scrollbar-width: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .no-scrollbar::-webkit-scrollbar {

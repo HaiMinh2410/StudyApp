@@ -431,22 +431,32 @@ window.resetTimer = resetTimer;
 /* =========================
    SCROLL LOGIC FOR FLOAT TIMER
 ========================= */
+let isScrolling = false;
 function handleScroll() {
-    const mainContent = document.getElementById("mainContent");
+    if (!isScrolling) {
+        window.requestAnimationFrame(() => {
+            handleScrollInternal();
+            isScrolling = false;
+        });
+        isScrolling = true;
+    }
+}
+
+function handleScrollInternal() {
     const floatTimer = document.getElementById("floatTimer");
     const timerSection = document.getElementById("timerSection");
     const timerToggle = document.getElementById("timerToggle");
     const header = document.getElementById("appHeader");
     const btmNav = document.getElementById("appBottomNav");
 
-    if (!mainContent || !floatTimer || !timerSection || !timerToggle) return;
+    if (!floatTimer || !timerSection || !timerToggle) return;
 
     // Add transition once if not present
     if (floatTimer && !floatTimer.style.transition) {
         floatTimer.style.transition = "all 0.3s ease";
     }
 
-    const scrollTop = mainContent.scrollTop;
+    const scrollTop = window.scrollY;
     const isTimerActive = timerToggle.checked && remainingSeconds > 0;
     const timerRect = timerSection.getBoundingClientRect();
     const headerHeight = header ? header.offsetHeight : 64;
@@ -474,7 +484,7 @@ function handleScroll() {
 }
 
 let lastScrollTop = 0;
-document.getElementById("mainContent")?.addEventListener("scroll", handleScroll);
+window.addEventListener("scroll", handleScroll);
 
 
 // Initial history on load
