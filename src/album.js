@@ -730,13 +730,32 @@ export function deleteCurrentAlbum() {
     renderSideAlbumList();
 }
 
-document.addEventListener("mouseup", handleTextSelection);
+// Xử lý lựa chọn văn bản (Hỗ trợ mobile qua selectionchange)
+let selectionTimeout = null;
+document.addEventListener("selectionchange", () => {
+    if (selectionTimeout) clearTimeout(selectionTimeout);
+    selectionTimeout = setTimeout(handleTextSelection, 300);
+});
+
 document.addEventListener("mousedown", (e) => {
     const popup = document.getElementById("selectionPopup");
     if (popup && !popup.contains(e.target) && !window.getSelection().toString().trim()) {
         popup.classList.add("hidden");
     }
 });
+
+// Chạm ra ngoài để ẩn trên mobile
+document.addEventListener("touchstart", (e) => {
+    const popup = document.getElementById("selectionPopup");
+    if (popup && !popup.contains(e.target)) {
+        // Chỉ ẩn nếu không phải đang chọn văn bản mới
+        setTimeout(() => {
+            if (!window.getSelection().toString().trim()) {
+                popup.classList.add("hidden");
+            }
+        }, 50);
+    }
+}, { passive: true });
 
 // Gắn các hàm vào window để gọi từ HTML
 window.openAddToAlbumModal = openAddToAlbumModal;
