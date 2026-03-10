@@ -569,7 +569,7 @@ export function renderExercise(savedData = null) {
         if (q.type === 'fitb') {
             bodyHtml = `
             <div class="form-control w-full mt-4">
-                <input type="text" placeholder="Nhập đáp án..." 
+                <input type="text" placeholder="Answer ..." 
                     class="input input-bordered input-primary w-full max-w-md font-medium shadow-inner"
                     name="q${q.id}" autocomplete="off">
             </div>`;
@@ -587,7 +587,7 @@ export function renderExercise(savedData = null) {
         div.innerHTML = `
             <div class="card-body p-4 md:p-6">
                 <h3 class="flex items-start gap-2 mb-2">
-                    <span class="badge text-primary px-0 font-bold text-lg shrink-0 mt-1">${q.number + `.`}</span>
+                    <span class="text-primary px-0 font-bold text-lg shrink-0">${q.number + `.`}</span>
                     <span class="font-semibold sm:font-bold text-lg leading-relaxed text-base-content">${q.text}</span>
                 </h3>
                 ${bodyHtml}

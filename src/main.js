@@ -472,12 +472,10 @@ function handleScrollInternal() {
     if (scrollTop > lastScrollTop && scrollTop > 50) {
         // Scroll Down
         if (header) header.style.transform = "translateY(-100%)";
-        if (btmNav) btmNav.style.transform = "translateY(100%)";
         if (floatTimer) floatTimer.style.top = "8px"; // top-2 (approx 0.5rem)
     } else {
         // Scroll Up
         if (header) header.style.transform = "translateY(0)";
-        if (btmNav) btmNav.style.transform = "translateY(0)";
         if (floatTimer) floatTimer.style.top = (headerHeight + 8) + "px"; // just below navbar
     }
     lastScrollTop = scrollTop;
