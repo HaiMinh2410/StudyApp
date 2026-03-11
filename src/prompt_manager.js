@@ -10,7 +10,7 @@ const DEFAULT_PROMPTS = [
     {
         id: "default-toeic",
         title: "TOEIC Generator",
-        content: `Tạo 2 Exercise, mỗi bài 10 câu hỏi dạng thường gặp trong các đề thi TOEIC, mức độ khó tương đương đề TOEIC thật.
+        content: `Tạo 2 Exercise, mỗi bài 10 câu hỏi dạng thường gặp trong các đề thi TOEIC, độ khó tổng thể: TOEIC 600–850.
 Cung cấp đáp án + giải thích chi tiết từng câu để người học có thể tự chấm và hiểu lý do.
 
 Yêu cầu bắt buộc:
@@ -79,7 +79,25 @@ Answer Key & Detailed Explanations – Exercise 2
 
 ...
 
-Độ khó tổng thể: TOEIC 600–850.`
+Bước Kiểm Tra Chất Lượng (BẮT BUỘC):
+
+Trước khi xuất bài tập, hãy chạy kiểm tra toàn diện.
+
+Đối với mỗi câu hỏi:
+
+- Kiểm tra tính đúng ngữ pháp của câu.
+
+- Kiểm tra xem dạng động từ có khớp với cấu trúc ngữ pháp dự định hay không.
+
+- Kiểm tra xem đáp án đúng có hoàn toàn phù hợp với câu hay không.
+
+- Kiểm tra xem tất cả các lựa chọn khác có sai ngữ pháp hoặc logic hay không.
+
+- Đảm bảo không có đáp án mơ hồ hoặc nhiều đáp án đúng.
+
+Nếu phát hiện bất kỳ vấn đề nào, hãy tạo lại câu hỏi đó trước khi hoàn thiện bộ bài tập.
+
+Không xuất các câu hỏi không đạt yêu cầu kiểm tra.`
     }
 ];
 
