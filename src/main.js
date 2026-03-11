@@ -488,7 +488,7 @@ function handleScrollInternal() {
             maxScrollTop = scrollTop; // Track the bottom-most point
         } else {
             // Scroll Up - Only show if scrolled up significantly
-            const threshold = window.innerHeight * 0.25; // 25vh
+            const threshold = window.innerHeight * 0.5; // 25vh
             if (scrollTop < 100 || (maxScrollTop - scrollTop) > threshold) {
                 if (header) header.style.transform = "translateY(0)";
                 if (floatTimer) floatTimer.style.top = (headerHeight + 12) + "px"; 
