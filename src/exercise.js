@@ -493,8 +493,8 @@ export function updateButtonStates() {
     submitBtns.forEach(btn => btn.disabled = !hasQ || isReviewMode || !hasAnswer);
     resetBtns.forEach(btn => btn.disabled = !hasQ || !hasAnswer);
 
-    // Xử lý hiển thị button Next Wrong
-    const nextWrongBtns = document.querySelectorAll("#nextWrongBottomBtn, #nextWrongDesktopBtn");
+    // Xử lý hiển thị button Next/Prev Wrong
+    const navigationWrongBtns = document.querySelectorAll("#nextWrongBottomBtn, #nextWrongDesktopBtn, #prevWrongBottomBtn, #prevWrongDesktopBtn");
     let hasWrong = false;
     if (isReviewMode) {
         hasWrong = questions.some(q => {
@@ -505,7 +505,7 @@ export function updateButtonStates() {
         });
     }
 
-    nextWrongBtns.forEach(btn => {
+    navigationWrongBtns.forEach(btn => {
         if (isReviewMode && hasWrong) {
             btn.classList.remove("hidden");
         } else {
@@ -528,6 +528,35 @@ export function nextWrongQuestion() {
     if (wrongQuestions.length === 0) return;
 
     currentWrongIdx = (currentWrongIdx + 1) % wrongQuestions.length;
+    const targetQ = wrongQuestions[currentWrongIdx];
+    const element = document.getElementById("q" + targetQ.id);
+
+    if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        element.classList.add('ring-4', 'ring-error/30');
+        setTimeout(() => element.classList.remove('ring-4', 'ring-error/30'), 2000);
+    }
+}
+
+export function previousWrongQuestion() {
+    if (!isReviewMode) return;
+
+    const wrongQuestions = questions.filter(q => {
+        const user = userAnswers[q.id];
+        const isCorrect = q.type === 'fitb'
+            ? q.answer.split('/').some(a => normalizeAnswer(a) === normalizeAnswer(user))
+            : user === q.answer;
+        return !isCorrect;
+    });
+
+    if (wrongQuestions.length === 0) return;
+
+    if (currentWrongIdx <= 0) {
+        currentWrongIdx = wrongQuestions.length - 1;
+    } else {
+        currentWrongIdx--;
+    }
+    
     const targetQ = wrongQuestions[currentWrongIdx];
     const element = document.getElementById("q" + targetQ.id);
 
@@ -830,3 +859,4 @@ window.updateInputButtons = updateInputButtons;
 window.updateButtonStates = updateButtonStates;
 window.renderExercise = renderExercise;
 window.nextWrongQuestion = nextWrongQuestion;
+window.previousWrongQuestion = previousWrongQuestion;

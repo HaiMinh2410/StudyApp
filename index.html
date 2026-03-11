@@ -241,7 +241,13 @@
                         <i data-lucide="check-circle" class="size-7 group-disabled:text-base-content/20"></i>
                     </div>
                 </button>
-                <button id="nextWrongBottomBtn" class="hidden group flex-1 h-12 flex justify-center bg-error/10"
+                <button id="prevWrongBottomBtn" class="hidden group flex-1 h-12 flex justify-center bg-error/15"
+                    onclick="window.previousWrongQuestion()">
+                    <div class="flex items-center justify-center text-error">
+                        <i data-lucide="chevrons-left" class="size-7"></i>
+                    </div>
+                </button>
+                <button id="nextWrongBottomBtn" class="hidden group flex-1 h-12 flex justify-center bg-error/10 border-l border-error/10"
                     onclick="window.nextWrongQuestion()">
                     <div class="flex items-center justify-center text-error">
                         <i data-lucide="chevrons-right" class="size-7"></i>
@@ -264,6 +270,11 @@
 
             <!-- Floating Sidebar Actions: DESKTOP ONLY -->
             <div class="hidden lg:flex items-center gap-3 fixed bottom-10 right-10 z-[100]">
+                <button id="prevWrongDesktopBtn"
+                    class="hidden btn btn-error btn-circle size-14 hover:scale-110 active:scale-95 transition-all shadow-lg"
+                    onclick="window.previousWrongQuestion()" title="Câu sai trước đó">
+                    <i data-lucide="chevrons-left" class="size-8"></i>
+                </button>
                 <button id="nextWrongDesktopBtn"
                     class="hidden btn btn-error btn-circle size-14 hover:scale-110 active:scale-95 transition-all shadow-lg"
                     onclick="window.nextWrongQuestion()" title="Câu sai tiếp theo">
