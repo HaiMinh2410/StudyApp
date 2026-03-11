@@ -19,6 +19,17 @@ document.addEventListener('DOMContentLoaded', () => {
             renderHistory();
         }
     });
+
+    // Reset copy button when closing prompt modal
+    document.getElementById("promptModal")?.addEventListener("close", resetCopyPromptBtn);
+
+    // Reset copy button if user copies something else while modal is open
+    window.addEventListener('copy', () => {
+        const modal = document.getElementById("promptModal");
+        if (modal && modal.open) {
+            resetCopyPromptBtn();
+        }
+    });
 });
 
 import { getExerciseState, setExerciseState } from './exercise.js';
@@ -492,27 +503,36 @@ renderPromptList();
 /* =========================
    PROMPT MODAL LOGIC
 ========================= */
+export function resetCopyPromptBtn() {
+    const btn = document.getElementById("copyPromptBtn");
+    if (!btn) return;
+
+    btn.innerHTML = `
+        <i data-lucide="copy" class="size-5 sm:size-4"></i>
+        <span class="hidden sm:block">Copy Prompt</span>
+    `;
+    if (window.lucide) window.lucide.createIcons();
+    
+    btn.classList.remove("btn-success");
+    btn.classList.add("btn-primary");
+    
+    btn.classList.replace("max-sm:text-success", "max-sm:text-primary");
+    btn.classList.replace("hover:max-sm:bg-success/10", "hover:max-sm:bg-primary/10");
+}
+window.resetCopyPromptBtn = resetCopyPromptBtn;
+
 export function copyPrompt() {
     const promptText = document.getElementById("promptText").innerText;
     navigator.clipboard.writeText(promptText).then(() => {
         const btn = document.getElementById("copyPromptBtn");
-        const originalText = btn.innerHTML;
         btn.innerHTML = `
-            <i data-lucide="check" class="h-4 w-4"></i>
-            <span>Copied!</span>
+            <i data-lucide="check" class="size-5 sm:size-4"></i>
+            <span class="hidden sm:block">Copied!</span>
         `;
         if (window.lucide) window.lucide.createIcons();
         btn.classList.replace("btn-primary", "btn-success");
         btn.classList.replace("max-sm:text-primary", "max-sm:text-success");
         btn.classList.replace("hover:max-sm:bg-primary/10", "hover:max-sm:bg-success/10");
-
-        setTimeout(() => {
-            btn.innerHTML = originalText;
-            if (window.lucide) window.lucide.createIcons();
-            btn.classList.replace("btn-success", "btn-primary");
-            btn.classList.replace("max-sm:text-success", "max-sm:text-primary");
-            btn.classList.replace("hover:max-sm:bg-success/10", "hover:max-sm:bg-primary/10");
-        }, 2000);
     });
 }
 window.copyPrompt = copyPrompt;
