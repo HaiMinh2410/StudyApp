@@ -480,19 +480,26 @@ function handleScrollInternal() {
     }
 
     // 2. Hide Header/BottomNav and Sync Float Timer position
-    if (scrollTop > lastScrollTop && scrollTop > 50) {
-        // Scroll Down
-        if (header) header.style.transform = "translateY(-100%)";
-        if (floatTimer) floatTimer.style.top = "8px"; // top-2 (approx 0.5rem)
-    } else {
-        // Scroll Up
-        if (header) header.style.transform = "translateY(0)";
-        if (floatTimer) floatTimer.style.top = (headerHeight + 8) + "px"; // just below navbar
+    if (scrollTop !== lastScrollTop) {
+        if (scrollTop > lastScrollTop && scrollTop > 50) {
+            // Scroll Down - Hide immediately
+            if (header) header.style.transform = "translateY(-100%)";
+            if (floatTimer) floatTimer.style.top = "12px"; 
+            maxScrollTop = scrollTop; // Track the bottom-most point
+        } else {
+            // Scroll Up - Only show if scrolled up significantly
+            const threshold = window.innerHeight * 0.25; // 25vh
+            if (scrollTop < 100 || (maxScrollTop - scrollTop) > threshold) {
+                if (header) header.style.transform = "translateY(0)";
+                if (floatTimer) floatTimer.style.top = (headerHeight + 12) + "px"; 
+            }
+        }
+        lastScrollTop = scrollTop;
     }
-    lastScrollTop = scrollTop;
 }
 
 let lastScrollTop = 0;
+let maxScrollTop = 0;
 window.addEventListener("scroll", handleScroll);
 
 
