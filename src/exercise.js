@@ -198,18 +198,28 @@ export function generateExercise() {
             const explanationKeywords = [
                 "giải thích", "explanation", "dấu hiệu", "vì", "do", "tại", "bởi vì", "because", "since", "as",
                 "cấu trúc", "thì", "tense", "ngữ cảnh", "context", "hành động", "thời điểm", "trải nghiệm",
-                "thói quen", "vừa mới", "kết quả", "trạng thái", "lưu ý", "quy tắc", "mốc thời gian", "cụ thể", "bẫy", "trap"
+                "thói quen", "vừa mới", "kết quả", "trạng thái", "lưu ý", "quy tắc", "mốc thời gian", "cụ thể", "bẫy", "trap",
+                "dùng", "chia", "loại", "dạng", "hình thức", "vế", "mệnh đề", "câu", "chủ ngữ", "động từ", "công thức",
+                "hiện tại", "quá khứ", "tương lai", "đơn", "tiếp diễn", "hoàn thành", "hoàn thành tiếp diễn",
+                "present", "past", "future", "simple", "continuous", "perfect", "progressive", "arrangement", "schedule", "kế hoạch"
             ];
 
-            // Sử dụng word boundary \b cho các từ ngắn để tránh khớp nhầm (vd: "has" chứa "as")
+            // Sử dụng word boundary \b cho các từ để tránh khớp nhầm
             const expRegex = new RegExp('\\b(' + explanationKeywords.join('|') + ')\\b', 'i');
 
-            const isExpPrefix = line.match(/^(giải thích|explanation|dấu hiệu|note|lưu ý|→|=>|->|vì|bởi|do|tại|since|because|bẫy|trap)/i);
+            const isExpPrefix = line.match(/^(giải thích|explanation|dấu hiệu|note|lưu ý|→|=>|->|vì|bởi|do|tại|since|because|bẫy|trap|lý do|reason)/i);
             const hasExpSymbol = line.includes("→") || line.includes("=>") || line.includes("->") || line.includes("=") || (line.includes(":") && line.length > 30);
-            const containsGrammarTerm = expRegex.test(line) || / (dùng|chia|thì|cấu trúc|loại|dạng) /i.test(line) || line.includes("“");
-
-            // Một dòng là giải thích nếu có prefix, có ký hiệu, hoặc chứa từ khóa ngữ pháp và đủ dài
-            const isExplanation = isExpPrefix || hasExpSymbol || (containsGrammarTerm && line.length > 25) || line.length > 100 || line.startsWith("(");
+            
+            // Một dòng là giải thích nếu:
+            // 1. Có prefix giải thích
+            // 2. Có ký hiệu giải thích
+            // 3. Chứa từ khóa ngữ pháp (expRegex)
+            // 4. Có các đặc điểm của câu văn: dài (>100 ký tự), hoặc bắt đầu viết hoa + kết thúc bằng dấu chấm và đủ dài (>40 ký tự)
+            // 5. Bắt đầu bằng dấu ngoặc đơn
+            const containsGrammarTerm = expRegex.test(line) || /\b(dùng|chia|thì|cấu trúc|loại|dạng|tense|vế|câu|mệnh đề)\b/i.test(line) || line.includes("“");
+            const isSentenceLike = (line.length > 40 && /^[A-ZĐ].*[\.\?!]$/.test(line)) || line.length > 100;
+            
+            const isExplanation = isExpPrefix || hasExpSymbol || containsGrammarTerm || isSentenceLike || line.startsWith("(");
 
             if (qNumMatch || ansLetterOnlyMatch) {
                 isAutoIncrementMode = false;
