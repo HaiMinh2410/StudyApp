@@ -225,6 +225,24 @@
                         </div>
                     </section>
 
+                    <!-- Progress Bar Section -->
+                    <section id="progressSection" class="hidden animate-in fade-in slide-in-from-top-4 duration-500">
+                        <div class="card bg-base-100 shadow-sm border border-base-300 overflow-hidden">
+                            <div class="card-body p-4 md:p-6">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div
+                                        class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-base-content/60">
+                                        <i data-lucide="bar-chart-3" class="h-4 w-4"></i>
+                                        Tiến độ hoàn thành
+                                    </div>
+                                    <span id="progressText" class="text-sm font-black text-primary">0%</span>
+                                </div>
+                                <progress id="progressBar" class="progress w-full h-4 shadow-sm"
+                                    value="0" max="100"></progress>
+                            </div>
+                        </div>
+                    </section>
+
                     <!-- Exercise Container -->
                     <section id="exerciseContainer" class="grid grid-cols-1 gap-4 md:gap-6">
                         <!-- Questions injected here -->
@@ -247,7 +265,8 @@
                         <i data-lucide="chevrons-left" class="size-7"></i>
                     </div>
                 </button>
-                <button id="nextWrongBottomBtn" class="hidden group flex-1 h-12 flex justify-center bg-error/10 border-l border-error/10"
+                <button id="nextWrongBottomBtn"
+                    class="hidden group flex-1 h-12 flex justify-center bg-error/10 border-l border-error/10"
                     onclick="window.nextWrongQuestion()">
                     <div class="flex items-center justify-center text-error">
                         <i data-lucide="chevrons-right" class="size-7"></i>
@@ -303,6 +322,21 @@
                     </span>
                 </div>
             </div>
+
+            <!-- Float Progress Bar (Only visible when scrolling, top-right) -->
+            <div id="floatProgress" class="fixed top-17 right-2 lg:top-18 lg:right-6 z-[60] hidden slide-in-from-top-4">
+                <div
+                    class="bg-base-100/95 backdrop-blur-md text-base-content px-2 py-1 rounded-full border border-base-300 flex flex-col w-36 md:w-48">
+                    <div class="flex items-center justify-between gap-2  md:gap-4">
+                        <progress id="floatProgressBar" class="progress w-full h-2.5" value="0"
+                            max="100"></progress>
+                        <span id="floatProgressText" class="font-mono font-black text-sm text-primary">0%</span>
+
+                    </div>
+
+                </div>
+            </div>
+
         </div>
 
         <aside class="drawer-side z-[60] border-r border-base-300">
@@ -313,7 +347,7 @@
                     <div class="flex justify-between items-center w-full">
                         <h3 class="text-sm font-black uppercase tracking-widest text-base-content/50">
                             <span class="hidden sm:inline-block">Activity</span> History
-                          
+
                         </h3>
                         <div class="flex gap-2">
                             <button id="historySelectBtn" onclick="toggleHistorySelectionMode()"
@@ -754,7 +788,9 @@
 
                         -Exercise 2 - 10 câu hỏi dạng điền vào chỗ trống
 
-                        Nội dung câu hỏi nên mang bối cảnh: công việc, doanh nghiệp, dự án, báo cáo, du lịch, phương tiện, khách sạn, nhà hàng, mua sắm, dịch vụ, ngân hàng, tài chính, tuyển dụng, công nghệ,... giống đề TOEIC.
+                        Nội dung câu hỏi nên mang bối cảnh: công việc, doanh nghiệp, dự án, báo cáo, du lịch, phương
+                        tiện, khách sạn, nhà hàng, mua sắm, dịch vụ, ngân hàng, tài chính, tuyển dụng, công nghệ,...
+                        giống đề TOEIC.
 
                         Sau hai phần bài tập, viết phần:
 
@@ -792,10 +828,11 @@
 
                         Exercise 2 – Complete the sentences with the correct form of the word in parentheses.
 
-                        (Yêu cầu: mỗi câu phải có một từ gợi ý đặt trong dấu ngoặc () ở vị trí cần điền sau khoảng trắng _____. Người làm bài phải
+                        (Yêu cầu: mỗi câu phải có một từ gợi ý đặt trong dấu ngoặc () ở vị trí cần điền sau khoảng trắng
+                        _____. Người làm bài phải
                         chia từ đó đúng dạng ngữ pháp.)
 
-                        1. Our flight to Tokyo ______ (leave) at 7:45 a.m. tomorrow. 
+                        1. Our flight to Tokyo ______ (leave) at 7:45 a.m. tomorrow.
                         2. We ______ (implement) a new project management system next month.
                         ...
 
@@ -804,7 +841,7 @@
                         1. had finished – explanation
                         2. had delivered – explanation
                         ...
-                        
+
                         Bước Kiểm Tra Chất Lượng (BẮT BUỘC):
 
                         Trước khi xuất bài tập, hãy chạy kiểm tra toàn diện.

@@ -8,7 +8,7 @@ let originalContent = "";
 
 const DEFAULT_PROMPTS = [
     {
-        id: "default-toeic",
+        id: "1-prompt",
         title: "TOEIC Generator",
         content: `Tạo 2 Exercise, mỗi bài 10 câu hỏi dạng thường gặp trong các đề thi TOEIC, độ khó tổng thể: TOEIC 600–850.
 Cung cấp đáp án + giải thích chi tiết từng câu để người học có thể tự chấm và hiểu lý do.
@@ -99,7 +99,7 @@ Nếu phát hiện bất kỳ vấn đề nào, hãy tạo lại câu hỏi đó
 Không xuất các câu hỏi không đạt yêu cầu kiểm tra.`
     },
     {
-        id: "1-toeic",
+        id: "2-prompt",
         title: "TOEIC Part 5",
         content: `Tạo 1 bài tập TOEIC Part 5 gồm 30 câu trắc nghiệm, độ khó tương đương đề TOEIC thật (mức 600–850), cung cấp đáp án + giải thích chi tiết từng câu để tự chấm.
 
@@ -162,6 +162,82 @@ Trước khi xuất bài tập, hãy chạy kiểm tra toàn diện.
 
 - Kiểm tra xem tất cả các lựa chọn khác có sai ngữ pháp hoặc logic hay không.
 
+- Đảm bảo không có đáp án mơ hồ hoặc nhiều đáp án đúng.
+
+Nếu phát hiện bất kỳ vấn đề nào, hãy tạo lại câu hỏi đó trước khi hoàn thiện bộ bài tập.
+
+Không xuất các câu hỏi không đạt yêu cầu kiểm tra.`
+    },
+    {
+        id: "3-prompt",
+        title: "Mixed TOEIC (MCQ & FITB)",
+        content: `2 Exercise mỗi bài 10 câu dạng thường gặp trong các đề thi TOEIC, mức độ khó giống TOEIC thật, Độ khó: TOEIC 600–850, cung cấp đáp án + giải thích chi tiết từng câu để tự chấm.
+
+Yêu cầu bắt buộc:
+
+Bài tập gồm 2 phần:
+
+- Exercise 1 - 10 câu hỏi trắc nghiệm, dạng chọn đáp án đúng nhất A, B, C hoặc D.
+
+- Exercise 2 - 10 câu hỏi dạng điền vào chỗ trống
+
+Nội dung câu hỏi nên mang bối cảnh: công việc, doanh nghiệp, dự án, báo cáo, du lịch, phương tiện, khách sạn, nhà hàng, mua sắm, dịch vụ, ngân hàng, tài chính, tuyển dụng, công nghệ,... giống đề TOEIC.
+
+Sau hai phần bài tập, viết phần:
+
+- Answer Key & Detailed Explanations – Exercise 1
+- Answer Key & Detailed Explanations – Exercise 2
+
+Trong phần giải thích:
+
+- Giải thích tại sao đáp án đúng
+- Nêu dấu hiệu nhận biết (nếu có)
+- Viết ngắn gọn, rõ ràng, dễ hiểu.
+
+Format:
+
+Header: .......( ví dụ:Header: Present Perfect)
+
+Exercise 1 – Chọn đáp án đúng nhất (A, B, C hoặc D).
+
+1. ...
+A. ...
+B. ...
+C. ...
+D. ...
+
+...
+
+Answer Key & Detailed Explanations – Exercise 1
+
+1. A – explanation
+
+...
+
+Exercise 2 – Complete the sentences with the correct form of the word in parentheses.
+
+(Yêu cầu: mỗi câu phải có một từ gợi ý đặt trong dấu ngoặc () ở vị trí cần điền sau khoảng trắng _____. Người làm bài phải chia từ đó đúng dạng ngữ pháp.)
+
+1. Our flight to Tokyo ______ (leave) at 7:45 a.m. tomorrow. 
+2. We ______ (implement) a new project management system next month.
+...
+
+Answer Key & Detailed Explanations – Exercise 2
+
+1. had finished – explanation
+2. had delivered – explanation
+...
+
+Bước Kiểm Tra Chất Lượng (BẮT BUỘC):
+
+Trước khi xuất bài tập, hãy chạy kiểm tra toàn diện.
+
+Đối với mỗi câu hỏi:
+
+- Kiểm tra tính đúng ngữ pháp của câu.
+- Kiểm tra xem dạng động từ có khớp với cấu trúc ngữ pháp dự định hay không.
+- Kiểm tra xem đáp án đúng có hoàn toàn phù hợp với câu hay không.
+- Kiểm tra xem tất cả các lựa chọn khác có sai ngữ pháp hoặc logic hay không.
 - Đảm bảo không có đáp án mơ hồ hoặc nhiều đáp án đúng.
 
 Nếu phát hiện bất kỳ vấn đề nào, hãy tạo lại câu hỏi đó trước khi hoàn thiện bộ bài tập.

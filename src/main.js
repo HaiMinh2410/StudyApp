@@ -455,21 +455,27 @@ function handleScroll() {
 
 function handleScrollInternal() {
     const floatTimer = document.getElementById("floatTimer");
+    const floatProgress = document.getElementById("floatProgress");
     const timerSection = document.getElementById("timerSection");
+    const progressSection = document.getElementById("progressSection");
     const timerToggle = document.getElementById("timerToggle");
     const header = document.getElementById("appHeader");
     const btmNav = document.getElementById("appBottomNav");
 
-    if (!floatTimer || !timerSection || !timerToggle) return;
+    if (!floatTimer || !timerSection || !timerToggle || !floatProgress || !progressSection) return;
 
     // Add transition once if not present
     if (floatTimer && !floatTimer.style.transition) {
         floatTimer.style.transition = "all 0.3s ease";
     }
+    if (floatProgress && !floatProgress.style.transition) {
+        floatProgress.style.transition = "all 0.3s ease";
+    }
 
     const scrollTop = window.scrollY;
     const isTimerActive = timerToggle.checked && remainingSeconds > 0;
     const timerRect = timerSection.getBoundingClientRect();
+    const progressRect = progressSection.getBoundingClientRect();
     const headerHeight = header ? header.offsetHeight : 64;
 
     // 1. Float Timer Logic (Visibility)
@@ -479,12 +485,22 @@ function handleScrollInternal() {
         floatTimer.classList.add("hidden");
     }
 
-    // 2. Hide Header/BottomNav and Sync Float Timer position
+    // 2. Float Progress Logic (Visibility)
+    // Show float progress when the main progress bar is scrolled out of view
+    const { questions } = getExerciseState();
+    if (questions.length > 0 && progressRect.bottom < 0) {
+        floatProgress.classList.remove("hidden");
+    } else {
+        floatProgress.classList.add("hidden");
+    }
+
+    // 3. Hide Header/BottomNav and Sync Float items position
     if (scrollTop !== lastScrollTop) {
         if (scrollTop > lastScrollTop && scrollTop > 50) {
             // Scroll Down - Hide immediately
             if (header) header.style.transform = "translateY(-100%)";
             if (floatTimer) floatTimer.style.top = "12px"; 
+            if (floatProgress) floatProgress.style.top = "12px";
             maxScrollTop = scrollTop; // Track the bottom-most point
         } else {
             // Scroll Up - Only show if scrolled up significantly
@@ -492,6 +508,7 @@ function handleScrollInternal() {
             if (scrollTop < 100 || (maxScrollTop - scrollTop) > threshold) {
                 if (header) header.style.transform = "translateY(0)";
                 if (floatTimer) floatTimer.style.top = (headerHeight + 12) + "px"; 
+                if (floatProgress) floatProgress.style.top = (headerHeight + 12) + "px";
             }
         }
         lastScrollTop = scrollTop;

@@ -449,6 +449,11 @@ export function generateExercise() {
     }
 
     updateButtonStates();
+    updateProgressBar();
+
+    // Hiển thị phần tiến độ
+    const progressSection = document.getElementById("progressSection");
+    if (progressSection) progressSection.classList.remove("hidden");
 
     // Tự động cuộn xuống bài tập sau khi tạo
     const container = document.getElementById("exerciseContainer");
@@ -586,6 +591,38 @@ export function previousWrongQuestion() {
 }
 
 /* =========================
+   PROGRESS BAR LOGIC
+========================= */
+export function updateProgressBar() {
+    if (questions.length === 0) return;
+
+    const answeredCount = questions.filter(q => {
+        if (q.type === 'fitb') {
+            const input = document.querySelector(`input[name="q${q.id}"]`);
+            return input && input.value.trim().length > 0;
+        } else {
+            const selected = document.querySelector(`input[name="q${q.id}"]:checked`);
+            return !!selected;
+        }
+    }).length;
+
+    const percent = Math.round((answeredCount / questions.length) * 100);
+    
+    // Update Main Progress
+    const progressText = document.getElementById("progressText");
+    const progressBar = document.getElementById("progressBar");
+    if (progressText) progressText.innerText = `${percent}%`;
+    if (progressBar) progressBar.value = percent;
+
+    // Update Float Progress
+    const floatProgressText = document.getElementById("floatProgressText");
+    const floatProgressBar = document.getElementById("floatProgressBar");
+    if (floatProgressText) floatProgressText.innerText = `${percent}%`;
+    if (floatProgressBar) floatProgressBar.value = percent;
+}
+window.updateProgressBar = updateProgressBar;
+
+/* =========================
    RENDER
 ========================= */
 export function renderExercise(savedData = null) {
@@ -663,6 +700,7 @@ export function renderExercise(savedData = null) {
         submitAnswers(true);
     }
     updateButtonStates();
+    updateProgressBar();
 }
 
 /* =========================
@@ -855,6 +893,7 @@ export function resetExercise() {
     if (typeof window.resetTimer === "function") window.resetTimer();
     renderExercise();
     updateButtonStates();
+    updateProgressBar();
     document.getElementById("exerciseContainer")?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
@@ -862,8 +901,14 @@ export function resetExercise() {
 document.getElementById("inputData")?.addEventListener("input", updateInputButtons);
 const exContainer = document.getElementById("exerciseContainer");
 if (exContainer) {
-    exContainer.addEventListener("input", updateButtonStates);
-    exContainer.addEventListener("change", updateButtonStates);
+    exContainer.addEventListener("input", () => {
+        updateButtonStates();
+        updateProgressBar();
+    });
+    exContainer.addEventListener("change", () => {
+        updateButtonStates();
+        updateProgressBar();
+    });
 }
 
 // Window Assignments
