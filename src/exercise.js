@@ -144,8 +144,9 @@ export function generateExercise() {
         if (answerKeyMatch) {
             answerSection = true;
             isAutoIncrementMode = true;
-            currentAnswerNumber = null; // Reset để không bám vào câu cuối của section trước
-            const subSectionMatch = line.match(/(exercise|bài(?:\s+(?:luyện\s+tập|tập))?|test|phần|đề|câu|section|part)[\s_]*\d+/i);
+            currentAnswerNumber = null;
+            // More robust section detection in answer key
+            const subSectionMatch = line.match(/(?:exercise|bài(?:\s+(?:luyện\s+tập|tập))?|test|phần|đề|câu|section|part)[\s_]*(\d+)/i);
             currentSectionInAnswers = subSectionMatch ? subSectionMatch[0].toLowerCase() : null;
             answerCounterInSection = 1;
             return;
@@ -177,21 +178,20 @@ export function generateExercise() {
             return;
         }
 
-        // --- 4. Parse Answer Section ---
         if (answerSection) {
-            const internalSectionMatch = line.match(/^(exercise|bài(?:\s+(?:luyện\s+tập|tập))?|test|phần|đề|câu|section|part)[\s_]*\d+/i);
-            if (internalSectionMatch && line.length < 120) {
+            const internalSectionMatch = line.match(/(?:exercise|bài(?:\s+(?:luyện\s+tập|tập))?|test|phần|đề|câu|section|part)[\s_]*(\d+)/i);
+            if (internalSectionMatch && line.length < 120 && questions.some(q => q.section && q.section.toLowerCase().includes(internalSectionMatch[0].toLowerCase()))) {
                 currentSectionInAnswers = internalSectionMatch[0].toLowerCase();
                 answerCounterInSection = 1;
                 isAutoIncrementMode = true;
-                currentAnswerNumber = null; // Reset
+                currentAnswerNumber = null;
                 return;
             }
 
             // Patterns: 
             // 1. "1. A - text" or "1. A" or "1. is working" -> qNumMatch
             // 2. "A - text" (sequence based) -> ansLetterOnlyMatch
-            let qNumMatch = line.match(/^(\d+)[\.\)]\s*(.*)/);
+            let qNumMatch = line.match(/^(?:(?:câu|bài|q)[\s_]*)?(\d+)[\.\)]\s*(.*)/i);
             let ansLetterOnlyMatch = line.match(/^([A-D])\s*[-–—:]\s*(.*)/i);
 
             // Nhận diện giải thích thông minh và chính xác hơn
@@ -242,14 +242,18 @@ export function generateExercise() {
                         q.answer = letter;
                         if (remainder) q.explanation = (q.explanation ? q.explanation + "<br>" : "") + remainder;
                     } else if (q.type === 'mcq') {
-                        let mcqMatch = remainder.match(/^([A-D])(?:[\s-–—:\.](.*))?$/i);
+                        // Cải thiện regex tách đáp án MCQ: linh hoạt hơn với dấu gạch ngang và khoảng trắng
+                        let mcqMatch = remainder.match(/^([A-D])(?:[\s\-–—:\.]{1,3}(.*))?$/i);
                         if (mcqMatch) {
                             q.answer = mcqMatch[1].toUpperCase();
                             if (mcqMatch[2]) q.explanation = (q.explanation ? q.explanation + "<br>" : "") + mcqMatch[2].trim();
                         } else {
-                            if (/^[A-D]$/i.test(remainder.charAt(0)) && (remainder.length === 1 || !/^\w/.test(remainder.charAt(1)))) {
-                                q.answer = remainder.charAt(0).toUpperCase();
-                                if (remainder.length > 2) q.explanation = (q.explanation ? q.explanation + "<br>" : "") + remainder.substring(1).trim();
+                            // Fallback nếu không có dấu phân cách rõ ràng (vd: "1. A")
+                            if (/^[A-D]$/i.test(remainder.trim())) {
+                                q.answer = remainder.trim().toUpperCase();
+                            } else if (/^[A-D]\s+/.test(remainder)) {
+                                q.answer = remainder.trim().charAt(0).toUpperCase();
+                                q.explanation = (q.explanation ? q.explanation + "<br>" : "") + remainder.trim().substring(1).trim();
                             } else {
                                 q.answer = remainder;
                             }
@@ -288,9 +292,11 @@ export function generateExercise() {
         }
 
         function findQuestionByNumber(num, section) {
+            if (!num) return null;
+            // 1. Tìm chính xác theo số câu và section
             let q = questions.find(x => {
                 if (x.number !== num) return false;
-                if (!section) return true;
+                if (!section) return false;
                 const sec = (x.section || "").toLowerCase();
                 const ansSec = section.toLowerCase();
                 if (sec.includes(ansSec) || ansSec.includes(sec)) return true;
@@ -298,7 +304,9 @@ export function generateExercise() {
                 const n2 = ansSec.match(/\d+/);
                 return n1 && n2 && n1[0] === n2[0];
             });
+            // 2. Tìm câu đầu tiên chưa có đáp án có số này (quan trọng khi có nhiều section)
             if (!q) q = questions.find(x => x.number === num && !x.answer);
+            // 3. Fallback cuối cùng
             if (!q) q = questions.find(x => x.number === num);
             return q;
         }
