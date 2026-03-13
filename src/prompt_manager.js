@@ -27,8 +27,40 @@ Các câu hỏi phải là dạng khó hơn hoặc có "trap" thường gặp tr
 - cấu trúc dễ chọn sai
 - bối cảnh khiến người học dễ bị đánh lừa
 
+
+
 Nội dung câu hỏi nên mang bối cảnh:
 công việc, doanh nghiệp, dự án, báo cáo, du lịch, phương tiện, khách sạn, nhà hàng, mua sắm, dịch vụ, ngân hàng, tài chính, tuyển dụng, công nghệ,... giống đề TOEIC.
+
+Bước Thiết Kế Đáp Án Gây Nhầm Lẫn (BẮT BUỘC):
+
+Khi tạo các lựa chọn A, B, C, D cho mỗi câu hỏi, hãy đảm bảo các đáp án có tính gây nhầm lẫn hợp lý giống đề TOEIC thật.
+
+Đối với mỗi câu hỏi:
+
+Tất cả các đáp án phải cùng loại ngữ pháp (ví dụ: đều là dạng động từ, hoặc đều là cụm động từ), tránh trường hợp một đáp án khác loại khiến người làm dễ loại trừ.
+
+Các đáp án sai phải có vẻ đúng về mặt hình thức, nhưng sai ở thì, cấu trúc, hoặc ngữ cảnh.
+
+Tránh tạo các đáp án sai quá rõ ràng hoặc vô lý khiến người học dễ dàng loại bỏ ngay.
+
+Khi kiểm tra thì của động từ, các lựa chọn nên bao gồm các dạng dễ nhầm lẫn.
+
+Các đáp án sai nên phản ánh những lỗi phổ biến của người học tiếng Anh, ví dụ:
+
+chia sai thì
+
+dùng sai trợ động từ
+
+nhầm lẫn giữa các thì gần giống nhau
+
+dùng sai dạng số ít/số nhiều.
+
+Không tạo các đáp án sai vi phạm ngữ pháp quá rõ ràng mà người học có thể loại bỏ ngay mà không cần đọc ngữ cảnh.
+
+Đảm bảo rằng ít nhất 2–3 lựa chọn có vẻ hợp lý, buộc người làm phải dựa vào dấu hiệu ngữ pháp hoặc ngữ cảnh trong câu để chọn đáp án đúng.
+
+Nếu phát hiện câu hỏi có đáp án quá dễ loại trừ hoặc không đủ tính gây nhầm lẫn, hãy tạo lại các lựa chọn đáp án cho câu đó trước khi xuất bài tập.
 
 Sau hai phần bài tập, viết phần:
 
@@ -84,15 +116,29 @@ Trước khi xuất bài tập, hãy chạy kiểm tra toàn diện.
 
 Đối với mỗi câu hỏi:
 
-- Kiểm tra tính đúng ngữ pháp của câu.
+Kiểm tra tính đúng ngữ pháp của câu sau khi điền đáp án đúng vào chỗ trống.
 
-- Kiểm tra xem dạng động từ có khớp với cấu trúc ngữ pháp dự định hay không.
+Thay đáp án đúng vào câu để tạo câu hoàn chỉnh, sau đó kiểm tra xem câu có:
 
-- Kiểm tra xem đáp án đúng có hoàn toàn phù hợp với câu hay không.
+trùng từ (ví dụ: used to to open),
 
-- Kiểm tra xem tất cả các lựa chọn khác có sai ngữ pháp hoặc logic hay không.
+lặp cấu trúc,
 
-- Đảm bảo không có đáp án mơ hồ hoặc nhiều đáp án đúng.
+thiếu động từ,
+
+hoặc sai dạng động từ hay không.
+
+Kiểm tra xem cấu trúc ngữ pháp cần kiểm tra có nằm trọn trong đáp án hay không; tránh trường hợp một phần cấu trúc nằm trong câu hỏi và một phần nằm trong đáp án gây lỗi hoặc mơ hồ.
+
+Kiểm tra xem dạng động từ trong đáp án có khớp hoàn toàn với dấu hiệu thời gian hoặc ngữ cảnh trong câu (since, for, last year, tomorrow, by the time, when, while, etc.).
+
+Kiểm tra xem đáp án đúng có tạo thành câu tự nhiên, logic và phù hợp văn phong TOEIC business English.
+
+Kiểm tra xem tất cả các lựa chọn khác có sai ngữ pháp, sai thì, sai cấu trúc hoặc sai logic ngữ cảnh hay không.
+
+Đảm bảo rằng chỉ có một đáp án đúng duy nhất và không có lựa chọn nào khác có thể chấp nhận được trong tiếng Anh tự nhiên.
+
+Đảm bảo rằng câu hỏi không gây hiểu nhầm hoặc tạo ra nhiều cách diễn giải khác nhau.
 
 Nếu phát hiện bất kỳ vấn đề nào, hãy tạo lại câu hỏi đó trước khi hoàn thiện bộ bài tập.
 
@@ -119,6 +165,36 @@ Câu 1–10: dễ – trung bình
 Câu 11–20: trung bình
 
 Câu 21–30: trung bình – khó
+
+Bước Thiết Kế Đáp Án Gây Nhầm Lẫn (BẮT BUỘC):
+
+Khi tạo các lựa chọn A, B, C, D cho mỗi câu hỏi, hãy đảm bảo các đáp án có tính gây nhầm lẫn hợp lý giống đề TOEIC thật.
+
+Đối với mỗi câu hỏi:
+
+Tất cả các đáp án phải cùng loại ngữ pháp (ví dụ: đều là dạng động từ, hoặc đều là cụm động từ), tránh trường hợp một đáp án khác loại khiến người làm dễ loại trừ.
+
+Các đáp án sai phải có vẻ đúng về mặt hình thức, nhưng sai ở thì, cấu trúc, hoặc ngữ cảnh.
+
+Tránh tạo các đáp án sai quá rõ ràng hoặc vô lý khiến người học dễ dàng loại bỏ ngay.
+
+Khi kiểm tra thì của động từ, các lựa chọn nên bao gồm các dạng dễ nhầm lẫn.
+
+Các đáp án sai nên phản ánh những lỗi phổ biến của người học tiếng Anh, ví dụ:
+
+chia sai thì
+
+dùng sai trợ động từ
+
+nhầm lẫn giữa các thì gần giống nhau
+
+dùng sai dạng số ít/số nhiều.
+
+Không tạo các đáp án sai vi phạm ngữ pháp quá rõ ràng mà người học có thể loại bỏ ngay mà không cần đọc ngữ cảnh.
+
+Đảm bảo rằng ít nhất 2–3 lựa chọn có vẻ hợp lý, buộc người làm phải dựa vào dấu hiệu ngữ pháp hoặc ngữ cảnh trong câu để chọn đáp án đúng.
+
+Nếu phát hiện câu hỏi có đáp án quá dễ loại trừ hoặc không đủ tính gây nhầm lẫn, hãy tạo lại các lựa chọn đáp án cho câu đó trước khi xuất bài tập.
 
 Trong phần giải thích:
 
@@ -147,22 +223,35 @@ Answer Key & Detailed Explanations
 2. had delivered – explanation
 ...
 
-
 Bước Kiểm Tra Chất Lượng (BẮT BUỘC):
 
 Trước khi xuất bài tập, hãy chạy kiểm tra toàn diện.
 
 Đối với mỗi câu hỏi:
 
-- Kiểm tra tính đúng ngữ pháp của câu.
+Kiểm tra tính đúng ngữ pháp của câu sau khi điền đáp án đúng vào chỗ trống.
 
-- Kiểm tra xem dạng động từ có khớp với cấu trúc ngữ pháp dự định hay không.
+Thay đáp án đúng vào câu để tạo câu hoàn chỉnh, sau đó kiểm tra xem câu có:
 
-- Kiểm tra xem đáp án đúng có hoàn toàn phù hợp với câu hay không.
+trùng từ (ví dụ: used to to open),
 
-- Kiểm tra xem tất cả các lựa chọn khác có sai ngữ pháp hoặc logic hay không.
+lặp cấu trúc,
 
-- Đảm bảo không có đáp án mơ hồ hoặc nhiều đáp án đúng.
+thiếu động từ,
+
+hoặc sai dạng động từ hay không.
+
+Kiểm tra xem cấu trúc ngữ pháp cần kiểm tra có nằm trọn trong đáp án hay không; tránh trường hợp một phần cấu trúc nằm trong câu hỏi và một phần nằm trong đáp án gây lỗi hoặc mơ hồ.
+
+Kiểm tra xem dạng động từ trong đáp án có khớp hoàn toàn với dấu hiệu thời gian hoặc ngữ cảnh trong câu (since, for, last year, tomorrow, by the time, when, while, etc.).
+
+Kiểm tra xem đáp án đúng có tạo thành câu tự nhiên, logic và phù hợp văn phong TOEIC business English.
+
+Kiểm tra xem tất cả các lựa chọn khác có sai ngữ pháp, sai thì, sai cấu trúc hoặc sai logic ngữ cảnh hay không.
+
+Đảm bảo rằng chỉ có một đáp án đúng duy nhất và không có lựa chọn nào khác có thể chấp nhận được trong tiếng Anh tự nhiên.
+
+Đảm bảo rằng câu hỏi không gây hiểu nhầm hoặc tạo ra nhiều cách diễn giải khác nhau.
 
 Nếu phát hiện bất kỳ vấn đề nào, hãy tạo lại câu hỏi đó trước khi hoàn thiện bộ bài tập.
 
@@ -182,6 +271,36 @@ Bài tập gồm 2 phần:
 - Exercise 2 - 10 câu hỏi dạng điền vào chỗ trống
 
 Nội dung câu hỏi nên mang bối cảnh: công việc, doanh nghiệp, dự án, báo cáo, du lịch, phương tiện, khách sạn, nhà hàng, mua sắm, dịch vụ, ngân hàng, tài chính, tuyển dụng, công nghệ,... giống đề TOEIC.
+
+Bước Thiết Kế Đáp Án Gây Nhầm Lẫn (BẮT BUỘC):
+
+Khi tạo các lựa chọn A, B, C, D cho mỗi câu hỏi, hãy đảm bảo các đáp án có tính gây nhầm lẫn hợp lý giống đề TOEIC thật.
+
+Đối với mỗi câu hỏi:
+
+Tất cả các đáp án phải cùng loại ngữ pháp (ví dụ: đều là dạng động từ, hoặc đều là cụm động từ), tránh trường hợp một đáp án khác loại khiến người làm dễ loại trừ.
+
+Các đáp án sai phải có vẻ đúng về mặt hình thức, nhưng sai ở thì, cấu trúc, hoặc ngữ cảnh.
+
+Tránh tạo các đáp án sai quá rõ ràng hoặc vô lý khiến người học dễ dàng loại bỏ ngay.
+
+Khi kiểm tra thì của động từ, các lựa chọn nên bao gồm các dạng dễ nhầm lẫn.
+
+Các đáp án sai nên phản ánh những lỗi phổ biến của người học tiếng Anh, ví dụ:
+
+chia sai thì
+
+dùng sai trợ động từ
+
+nhầm lẫn giữa các thì gần giống nhau
+
+dùng sai dạng số ít/số nhiều.
+
+Không tạo các đáp án sai vi phạm ngữ pháp quá rõ ràng mà người học có thể loại bỏ ngay mà không cần đọc ngữ cảnh.
+
+Đảm bảo rằng ít nhất 2–3 lựa chọn có vẻ hợp lý, buộc người làm phải dựa vào dấu hiệu ngữ pháp hoặc ngữ cảnh trong câu để chọn đáp án đúng.
+
+Nếu phát hiện câu hỏi có đáp án quá dễ loại trừ hoặc không đủ tính gây nhầm lẫn, hãy tạo lại các lựa chọn đáp án cho câu đó trước khi xuất bài tập.
 
 Sau hai phần bài tập, viết phần:
 
@@ -234,11 +353,29 @@ Trước khi xuất bài tập, hãy chạy kiểm tra toàn diện.
 
 Đối với mỗi câu hỏi:
 
-- Kiểm tra tính đúng ngữ pháp của câu.
-- Kiểm tra xem dạng động từ có khớp với cấu trúc ngữ pháp dự định hay không.
-- Kiểm tra xem đáp án đúng có hoàn toàn phù hợp với câu hay không.
-- Kiểm tra xem tất cả các lựa chọn khác có sai ngữ pháp hoặc logic hay không.
-- Đảm bảo không có đáp án mơ hồ hoặc nhiều đáp án đúng.
+Kiểm tra tính đúng ngữ pháp của câu sau khi điền đáp án đúng vào chỗ trống.
+
+Thay đáp án đúng vào câu để tạo câu hoàn chỉnh, sau đó kiểm tra xem câu có:
+
+trùng từ (ví dụ: used to to open),
+
+lặp cấu trúc,
+
+thiếu động từ,
+
+hoặc sai dạng động từ hay không.
+
+Kiểm tra xem cấu trúc ngữ pháp cần kiểm tra có nằm trọn trong đáp án hay không; tránh trường hợp một phần cấu trúc nằm trong câu hỏi và một phần nằm trong đáp án gây lỗi hoặc mơ hồ.
+
+Kiểm tra xem dạng động từ trong đáp án có khớp hoàn toàn với dấu hiệu thời gian hoặc ngữ cảnh trong câu (since, for, last year, tomorrow, by the time, when, while, etc.).
+
+Kiểm tra xem đáp án đúng có tạo thành câu tự nhiên, logic và phù hợp văn phong TOEIC business English.
+
+Kiểm tra xem tất cả các lựa chọn khác có sai ngữ pháp, sai thì, sai cấu trúc hoặc sai logic ngữ cảnh hay không.
+
+Đảm bảo rằng chỉ có một đáp án đúng duy nhất và không có lựa chọn nào khác có thể chấp nhận được trong tiếng Anh tự nhiên.
+
+Đảm bảo rằng câu hỏi không gây hiểu nhầm hoặc tạo ra nhiều cách diễn giải khác nhau.
 
 Nếu phát hiện bất kỳ vấn đề nào, hãy tạo lại câu hỏi đó trước khi hoàn thiện bộ bài tập.
 
